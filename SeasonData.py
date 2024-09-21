@@ -60,7 +60,7 @@ class NHLData:
             local_file = join(path_directory, f"{season}_{game}.json")
 
             # API URL to fetch play-by-play data for the given game and season
-            url = f"https://api-web.nhle.com/v1/gamecenter/{season}02{game}/play-by-play"
+            url = f"https://api-web.nhle.com/v1/gamecenter/{season}{game_type.value}{game}/play-by-play"
 
             # Check if the data file exists locally
             if not isfile(local_file):
