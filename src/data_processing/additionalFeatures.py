@@ -49,4 +49,15 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
         lambda x: angle_between_vectors(x['iceCoord'], np.array([-89, 0])) if x['iceCoord'][0] <= 0
         else angle_between_vectors(x['iceCoord'], np.array([89, 0])), axis=1)
 
+    # Add time before the last shot to observe the offensive pressure
+
+    # Sort the dataframe by the period to calculate the time since the last shot
+    clean_df['timeSinceLastShot'] = clean_df.groupby('eventOwnerTeam')['timeInPeriod'].diff()
+
+    # Convert the time to minutes and seconds
+    clean_df['timeSinceLastShot'] = clean_df['timeSinceLastShot'].dt.total_seconds()  # Convert to seconds
+    clean_df['timeSinceLastShot'] = clean_df.apply(lambda x: "0:00"
+    if pd.isnull(x['timeSinceLastShot']) else
+    f"{int(x['timeSinceLastShot'] // 60)}:{int(x['timeSinceLastShot'] % 60):02d}", axis=1)  # 02d: 2 digits
+
     return clean_df
