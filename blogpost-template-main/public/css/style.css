@@ -1,0 +1,62 @@
+.toc__list:before {
+content: "Table des matières";
+font-weight: bold;
+font-size: 1.5rem;
+}
+
+.toc__list {
+border: 2px solid #eee;
+border-radius: 4px;
+line-height: 1.8rem;
+padding: 1rem 1.5rem;
+font-weight: 600;
+}
+
+.toc__sublist li {
+padding-left: 1.25rem;
+}
+
+.toc-h2:first-child {
+margin-top: 1rem;
+}  
+
+#toc a {
+color: #BE185D;
+text-decoration: underline;
+}
+
+#toc a:hover {
+color: #9D174D;
+}
+
+div.tableOfContent {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 38rem;
+}
+
+/*
+.toc__list {
+    position: sticky;
+    top: 10px;
+}*/
+
+#back-to-top {
+    position: fixed;
+    bottom: 20px; /* Distance par rapport au bas de la page */
+    right: 20px;  /* Distance par rapport au côté droit */
+    z-index: 100; /* Assure que le bouton soit au-dessus des autres éléments */
+    background-color: #333;
+    color: white;
+    padding: 10px 15px;
+    font-size: 18px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: none; /* Caché par défaut */
+    opacity: 0.7; /* Transparence légère */
+  }
+  
+  #back-to-top:hover {
+    opacity: 1; /* Opacité complète au survol */
+  }
