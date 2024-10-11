@@ -1,21 +1,4 @@
----
-layout: post
-title: Milestone 1
-toc: true
-toc_sticky: true
----
-
-## Question 1
-
-## Question 2 : Outil de débogage interactif
-
-Ceci est un apercu de l'outil de débogage interactif:
-
-![Apercu de l'outil de débogage](/public/debugging-tool.png)
-
-Le code pour l'implementer est le suivant:
-
-  ```python
+# TODO FRANCK - IMPLEMENT THE VISUALISATION HERE
 
 import ipywidgets
 import pprint
@@ -93,11 +76,3 @@ def plot_game_event(game_data, event_number):
 
     # on affiche les données brute de l'évenement
     pprint.pprint(event_data)
-
-  ```
-
-Avec cet outil, on peut sélectionner une saison, le type de match (saison régulière ou séries éliminatoires)
-et obtenir les informations brutes (telles que récupérées sur site du NHL) sur les matchs correspondant aux critères. On peut 
-également visualiser les données des évenements qui se sont produits durant un match.
-
-

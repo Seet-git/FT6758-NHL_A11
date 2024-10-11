@@ -4,7 +4,6 @@
   {% include head.html %}
 
   <body>
-
     {% include sidebar.html %}
 
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
@@ -18,6 +17,10 @@
           </h3>
         </div>
       </div>
+      
+      <div class="tableOfContent">
+        {% toc %}
+      </div>
 
       <div class="container content">
         {{ content }}
@@ -26,6 +29,26 @@
 
     <label for="sidebar-checkbox" class="sidebar-toggle"></label>
 
+    <a href="#" id="back-to-top" title="Retour en haut" style="display: none;">↑</a>
+
     <script src='{{ site.baseurl }}/public/js/script.js'></script>
+
+    <script>
+      // Afficher le bouton lorsque l'utilisateur défile
+      window.onscroll = function() {
+        var backToTopButton = document.getElementById("back-to-top");
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+          backToTopButton.style.display = "block"; // Affiche le bouton
+        } else {
+          backToTopButton.style.display = "none"; // Cache le bouton
+        }
+      };
+    
+      // Remonter doucement en haut lorsque le bouton est cliqué
+      document.getElementById("back-to-top").addEventListener("click", function(event) {
+        event.preventDefault(); // Empêche le comportement par défaut
+        window.scrollTo({top: 0, behavior: 'smooth'}); // Défilement fluide vers le haut
+      });
+    </script>
   </body>
 </html>
