@@ -69,6 +69,9 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
     # Add shot distance
     clean_df = additional_features(clean_df)
 
+    # Drop situation code
+    clean_df.drop('situationCode', axis=1, inplace=True)
+
     return clean_df
 
 
