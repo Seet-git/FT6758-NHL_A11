@@ -1,1 +1,78 @@
 # TODO FRANCK - IMPLEMENT THE VISUALISATION HERE
+
+import ipywidgets
+import pprint
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from src.fetch.NHLData import NHLData
+
+def plot_nhl_data(nhl_data_provider: NHLData, game_type, season):
+    if (game_type == 'regular'):
+        games_data = nhl_data_provider.regular_season[season]
+    else:
+        games_data = nhl_data_provider.playoffs[season]
+
+    game_count = len(games_data)
+    ipywidgets.interact(plot_game, game_number=(1, game_count, 1), games_data=ipywidgets.fixed(games_data))
+
+
+def plot_game(game_number, games_data):
+    game_data = games_data[game_number - 1]
+
+    print(game_data['startTimeUTC'])
+    print(
+        f"Game ID: {game_number}; {game_data['homeTeam']['abbrev']} (home) vs {game_data['awayTeam']['abbrev']} (away)")
+
+    col1 = ['', 'Teams', 'Goals', 'SoG']
+    col2 = ["Home", f"{game_data['homeTeam']['abbrev']}", f"{game_data['homeTeam']['score']}",
+            f"{game_data['homeTeam']['sog']}"]
+    col3 = ["Away", f"{game_data['awayTeam']['abbrev']}", f"{game_data['awayTeam']['score']}",
+            f"{game_data['awayTeam']['sog']}"]
+    print('')
+    for c1, c2, c3 in zip(col1, col2, col3):
+        print(f'{c1:<18} {c2:<18} {c3:<18}')
+
+    event_count = len(game_data['plays'])
+
+    ipywidgets.interact(plot_game_event, event_number=(1, event_count, 1), game_data=ipywidgets.fixed(game_data))
+
+
+def plot_game_event(game_data, event_number):
+    event_data = game_data['plays'][event_number - 1]
+    print("infos de l'evenement")
+
+    img = mpimg.imread('images/patinoire.png')
+    img_height, img_width = img.shape[0], img.shape[1]
+
+    fig, ax = plt.subplots()
+
+    # Afficher l'image dans le fond
+    ax.imshow(img, extent=[-100, 100, -42.5, 42.5], origin='lower')
+
+    # Positionner les axes x et y aux bords (gauche pour y et bas pour x)
+    ax.spines['left'].set_position(('axes', 0))  # Garder l'axe y à gauche
+    ax.spines['bottom'].set_position(('axes', 0))  # Garder l'axe x en bas
+
+    # Masquer les axes du haut et de droite
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+
+    if ('details' in event_data and 'xCoord' in event_data['details'] and 'yCoord' in event_data['details']):
+        ax.scatter(event_data['details']['xCoord'], event_data['details']['yCoord'], color="blue", s=100, zorder=5)
+
+    y_min, y_max = plt.ylim()
+
+    if event_data['homeTeamDefendingSide'] == 'right':
+        home_team_position_x = 40
+        away_team_position_x = -60
+    else:
+        home_team_position_x = -60
+        away_team_position_x = 40
+
+    plt.text(home_team_position_x, y_max, game_data['homeTeam']['abbrev'], fontsize=12, verticalalignment='bottom')
+    plt.text(away_team_position_x, y_max, game_data['awayTeam']['abbrev'], fontsize=12, verticalalignment='bottom')
+
+    plt.show()
+
+    # on affiche les données brute de l'évenement
+    pprint.pprint(event_data)
