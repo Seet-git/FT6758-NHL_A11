@@ -19,7 +19,7 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
     df_teams = extract_teams(game_nhl)
 
     # Create a new dataframe for the event data
-    clean_df = pd.DataFrame(df_pbp[['periodDescriptor', 'timeInPeriod', 'situationCode', "homeTeamDefendingSide",
+    clean_df = pd.DataFrame(df_pbp[['periodDescriptor', 'timeInPeriod', 'situationCode',
                                     'typeDescKey', 'details']])
 
     # PERIOD DESCRIPTOR
@@ -56,6 +56,7 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
 
     # Add the extracted data to the new dataframe
     clean_df['iceCoord'] = df_details['iceCoord']
+    clean_df['zoneShoot'] = df_details['zoneCode']
     clean_df['shootingPlayer'] = df_details['shootingPlayer']
     clean_df['goaliePlayer'] = df_details['goaliePlayer']
     clean_df['shotType'] = df_details['shotType']
@@ -68,6 +69,9 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
 
     # Add shot distance
     clean_df = additional_features(clean_df)
+
+    # Drop situation code
+    clean_df.drop('situationCode', axis=1, inplace=True)
 
     return clean_df
 
