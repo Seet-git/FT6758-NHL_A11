@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def get_team_shoot(data: dict, year: int, team_name: str):
+def get_team_shoot(data: dict, year: int, team_name: str) -> list:
+
     # Récupérer le nom de chaque équipe de l'année
     teams_regular_season = pd.concat([df['eventOwnerTeam'] for df in data[year]])
     unique_teams = teams_regular_season.unique()
@@ -25,17 +26,50 @@ def get_team_shoot(data: dict, year: int, team_name: str):
 
     coords_list = []  # List to store the updated coordinates as tuples
 
+    # Finding on which side the team is starting the game
+    first_offensive_zone_event = df[df['zoneShoot'] == 'O'].iloc[0]
+    side = 'left' if first_offensive_zone_event['iceCoord'][0] < 0 else 'right'
+    previous_period = '1/3'
+
     # Modify the coordinates to fit the offensive zone
-    for index, row in df.iterrows():
+    for _, row in df.iterrows():
+
         coords = row['iceCoord']  # Get the tuple from the DataFrame
+        currentPeriod = row['currentPeriod']
 
-        if row['teamSide'] == 'home':
-            # Rotate -90 degrees if home team is defending left side, else rotate 90 degrees
-            new_coords = (-coords[1], coords[0]) if row['homeTeamDefendingSide'] == 'left' else (coords[1], -coords[0])
+        # If the team is on the left side of the ice
+        if side == 'left':
 
+            # If the period has not change
+            if currentPeriod == previous_period:
+                new_coords = (coords[1], -coords[0])  # Rotate coordinates 90 degrees
+
+            # If the period has changed
+            else:
+                
+                previous_period = currentPeriod # Update the previous period
+
+                # If its not overtime during the regular season, update team side and rotate accordingly
+                if not (previous_period == '4/3' and str(row['idGame'])[4:6] == '02'):
+                    side = 'right' # Switch the team side
+                    new_coords = (coords[1], -coords[0])  #Rotate coordinates -90 degrees
+
+        # If the team is on the left side of the ice
         else:
-            # Rotate 90 degrees if home team is defending left side, else rotate -90 degrees
-            new_coords = (coords[1], -coords[0]) if row['homeTeamDefendingSide'] == 'left' else (-coords[1], coords[0])
+
+            # If the period has not change
+            if currentPeriod == previous_period:
+                new_coords = (-coords[1], coords[0])  # Rotate coordinates -90 degrees
+
+            # If the period has changed
+            else:
+
+                previous_period = currentPeriod # Update the previous period
+
+                # If its not overtime during the regular season, update team side and rotate accordingly
+                if not (previous_period == '4/3' and str(row['idGame'])[4:6] == '02'):
+                    side = 'left' # Switch the team side
+                    new_coords = (coords[1], -coords[0])  #Rotate coordinates 90 degrees
 
         # Append the new coordinates to the coords_list
         coords_list.append(new_coords)
@@ -46,8 +80,8 @@ def get_team_shoot(data: dict, year: int, team_name: str):
 
     return x_coords, y_coords
 
-
 def plot_team_shots(data: dict, year: int, team_name: str):
+
     x_coords, y_coords = get_team_shoot(data, year, team_name)
 
     # Load the offensive zone
