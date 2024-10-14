@@ -68,6 +68,8 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
         lambda x: angle_between_vectors(x['adjustedCoord'], np.array([0, 89])) if x['adjustedCoord'][1] > 0
         else angle_between_vectors(x['adjustedCoord'], np.array([0, -89])), axis=1)
 
+    clean_df.drop(columns=['adjustedCoord'], inplace=True)  # Drop the adjusted coordinates
+
     # Add time before the last shot to observe the offensive pressure
 
     # Sort the dataframe by the period to calculate the time since the last shot
