@@ -41,7 +41,7 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
 
     # Finding on which side the team is starting the game
     first_offensive_zone_event = clean_df[clean_df['zoneShoot'] == 'O'].iloc[0]
-    side = 'left' if first_offensive_zone_event['iceCoord'][0] < 0 else 'right'
+    side = 'right' if first_offensive_zone_event['iceCoord'][0] < 0 else 'left'
 
     for _, row in clean_df.iterrows():
         # Calculer les nouvelles coordonnées selon le côté et la période

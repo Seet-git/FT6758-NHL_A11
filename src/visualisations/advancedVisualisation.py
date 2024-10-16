@@ -105,7 +105,7 @@ def get_team_shots(data: dict, year: int) -> dict:
 
         # Trouver de quel côté de la patinoire l'équipe commence le match
         first_offensive_zone_event = team_df[team_df['zoneShoot'] == 'O'].iloc[0]
-        side = 'gauche' if first_offensive_zone_event['iceCoord'][0] < 0 else 'droite'
+        side = 'right' if first_offensive_zone_event['iceCoord'][0] < 0 else 'left'
 
         # Modifier les coordonnées pour correspondre à la zone offensive
         for _, row in team_df.iterrows():
