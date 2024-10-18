@@ -1,12 +1,15 @@
 import numpy as np
 import pandas as pd
 
-from src.visualisations.advancedVisualisation import get_coordinates
+from src.visualisations.advancedVisualisations.advancedVisualisation import get_coordinates
 
 
 def angle_between_vectors(v1: np.array, v2: np.array) -> float:
     """
     Calculate the angle in degrees between two 2D vectors.
+    :param v1: np.array Vector 1
+    :param v2: np.array Vector 2
+    :return: float Angle in degrees
     """
     # Dot product
     dot_product = np.dot(v1, v2)
@@ -34,7 +37,11 @@ def angle_between_vectors(v1: np.array, v2: np.array) -> float:
 
 
 def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
-    """Add additional features to the dataframe"""
+    """
+    Add additional features to the cleaned DataFrame.
+    :param clean_df: Pd.DataFrame Cleaned DataFrame
+    :return: pd.Dataframe with additional features
+    """
 
     # List to store the updated coordinates as tuples
     coords_list = []  # List to store the updated coordinates as tuples
@@ -63,7 +70,7 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
         lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89]))if x['adjustedCoord'][1] > 0
         else dist_euclidian(x['adjustedCoord'], np.array([0, -89])), axis=1)
 
-    # Add shot angle based on the ice coordinates
+    # Add a shot angle based on the ice coordinates
     clean_df['shotAngle'] = clean_df.apply(
         lambda x: angle_between_vectors(x['adjustedCoord'], np.array([0, 89])) if x['adjustedCoord'][1] > 0
         else angle_between_vectors(x['adjustedCoord'], np.array([0, -89])), axis=1)

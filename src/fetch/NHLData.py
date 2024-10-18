@@ -9,24 +9,17 @@ class NHLData:
 
     # Constructor
     def __init__(self):
-        """
-        Initialize the NHLData object.
-        """
-
-        self.playoffs = {}
-        self.regular_season = {}
+        self.playoffs = {} # Dictionary to store playoff data
+        self.regular_season = {} # Dictionary to store regular season data
 
     def fetch_regular_season(self, year: str):
-        """
-        Fetch regular season data for a specific year.
-        :param year: The season year
-        """
-
         """
         Fetches play-by-play regular season game data for a season and stores it locally.
         The function continues fetching data until a non-200 response is received from the API.
         The fetched data is saved to local JSON files, and if the file exists locally, it will be loaded from there.
         The loaded data is added to dictionary self.regular_season, where the key is the year/season of the regular season.
+
+        :param year: The season year
         """
 
         # Path directory to save files
@@ -80,19 +73,15 @@ class NHLData:
 
         # Store the list of game data in the appropriate class attribute for later use
         self.regular_season[year] = games_list
-        print(f"Data imported: {nb_data}")
 
     def fetch_playoffs(self, year: str):
-        """
-        Fetch playoffs data for a specific year.
-        :param year: The season year
-        """
-
         """
         Fetches play-by-play playoffs game data for a season and stores it locally.
         The function continues fetching data until the final playoff round (4).
         The fetched data is saved to local JSON files, and if the file exists locally, it will be loaded from there.
-        The loaded data is added to dictionary self.playoffs, where the key is the year/season of the playoffs. 
+        The loaded data is added to dictionary self.playoffs, where the key is the year/season of the playoffs.
+
+        :param year: The season year
         """
 
         # Path directory to save files
@@ -148,17 +137,23 @@ class NHLData:
 
         # Store the list of game data in the appropriate class attribute for later use
         self.playoffs[year] = games_list
-        print(f"Data imported: {nb_data}")
 
     def __generate_playoff_id(self, playoff_id: str) -> str:
+        """
+        Generates the next playoff game id based on the current game id.
+        The game id is a string with the format '0XXX', where:
+        - The first digit is always '0'.
+        - The second digit represents the round of the playoffs.
+        - The third digit represents the matchup within the round.
+        - The fourth digit represents the game number within the matchup.
+        """
 
         # Convert the game_id into individual components
         prefix = playoff_id[0]  # Keep the first digit (always '0')
         round_digit = int(playoff_id[1])  # 2nd digit gives the round
         matchup_digit = int(playoff_id[2])  # 3rd digit gives the matchup
-        game_digit = int(playoff_id[3])  # 4th digit gives the game number in the series
 
-        # Reset game digit to one
+        # Reset a game digit to one
         game_digit = 1
 
         # Conditions to update the matchup digit
