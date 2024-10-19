@@ -93,6 +93,8 @@ def clean_data(raw_data: NHLData) -> tuple:
         # Add all the cleaned dataframes (shots per game) for a year to the dictionary
         regular_season[year] = [convert_game_to_dataframe(game) for game in yearly_data]
 
+    del raw_data.regular_season  # Remove the data from the raw data object
+
     # PLAYOFF
     playoff = {}  # Initialize the return dictionary
 
@@ -102,5 +104,7 @@ def clean_data(raw_data: NHLData) -> tuple:
 
         # Add all the cleaned dataframes (shots per game) for a year to the dictionary
         playoff[year] = [convert_game_to_dataframe(game) for game in yearly_data]
+
+    del raw_data.playoffs  # Remove the data from the raw data object
 
     return regular_season, playoff

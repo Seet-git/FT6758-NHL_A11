@@ -8,14 +8,11 @@ def get_data_from(first_year: int, last_year: int) -> NHLData:
     and the corresponding values are lists of DataFrames, where each DataFrame represents all the shots taken
     in a particular game during that year.
 
-    Parameters:
-    - first (int): The first year (inclusive) from which to retrieve data.
-    - last (int): The last year (inclusive) from which to retrieve data.
+    :param first_year: The first year (inclusive) from which to retrieve data.
+    :param last_year: The last year (inclusive) from which to retrieve data.
 
-    Returns:
-    - dict: A dictionary where the keys are years, and the values are lists of DataFrames. Each DataFrame corresponds
+    :return: A dictionary where the keys are years, and the values are lists of DataFrames. Each DataFrame corresponds
     to a single game in the specified year and contains information about the shots taken during that game.
-
     """
 
     raw_data = NHLData()  # Initialize the data object
@@ -25,5 +22,6 @@ def get_data_from(first_year: int, last_year: int) -> NHLData:
         # Generate the data from API or local if available
         raw_data.fetch_regular_season(year)
         raw_data.fetch_playoffs(year)
+        print(f"Successfully imported NHL data for the {year} season.")
 
     return raw_data

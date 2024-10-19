@@ -2,8 +2,11 @@ import pandas as pd
 
 
 def extract_players(game_nhl: dict) -> pd.DataFrame:
-    """Extract the play-by-play data from the game dictionary"""
-
+    """
+    Extract player data from the NHL game
+    :param game_nhl: Dictionary containing the data of the NHL game
+    :return: A Pandas DataFrame containing player data
+    """
     # Extract player data
     df_players = pd.DataFrame(game_nhl['rosterSpots'])[['playerId', 'firstName', 'lastName']]
 
@@ -14,7 +17,11 @@ def extract_players(game_nhl: dict) -> pd.DataFrame:
 
 
 def extract_teams(game_nhl: dict) -> pd.DataFrame:
-    """Extract 'home' and 'away' teams"""
+    """
+     Extract team data from the NHL game
+     :param game_nhl: Dictionary containing the data of the NHL game
+     :return: A Pandas DataFrame containing team data
+    """
     home_team = {'teamId': game_nhl['homeTeam']['id'], 'teamName': game_nhl['homeTeam']['name']['default'],
                  'teamSide': 'home'}
     away_team = {'teamId': game_nhl['awayTeam']['id'], 'teamName': game_nhl['awayTeam']['name']['default'],

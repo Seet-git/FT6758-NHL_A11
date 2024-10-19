@@ -1,17 +1,21 @@
-import ipywidgets
 import pprint
-import matplotlib.pyplot as plt
+
+import ipywidgets
 import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+
 from src.fetch.NHLData import NHLData
 
+
 def plot_nhl_data(nhl_data_provider: NHLData, game_type, season):
-    if (game_type == 'regular'):
+    if game_type == 'regular':
         games_data = nhl_data_provider.regular_season[season]
     else:
         games_data = nhl_data_provider.playoffs[season]
 
     game_count = len(games_data)
     ipywidgets.interact(plot_game, game_number=(1, game_count, 1), games_data=ipywidgets.fixed(games_data))
+
 
 def plot_game(game_number, games_data):
     game_data = games_data[game_number - 1]
@@ -33,13 +37,12 @@ def plot_game(game_number, games_data):
 
     ipywidgets.interact(plot_game_event, event_number=(1, event_count, 1), game_data=ipywidgets.fixed(game_data))
 
+
 def plot_game_event(game_data, event_number):
     event_data = game_data['plays'][event_number - 1]
-    print("infos de l'evenement")
+    print("infos de l'événement")
 
     img = mpimg.imread('images/patinoire.png')
-    img_height, img_width = img.shape[0], img.shape[1]
-
     fig, ax = plt.subplots()
 
     # Afficher l'image dans le fond
@@ -53,7 +56,7 @@ def plot_game_event(game_data, event_number):
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
 
-    if ('details' in event_data and 'xCoord' in event_data['details'] and 'yCoord' in event_data['details']):
+    if 'details' in event_data and 'xCoord' in event_data['details'] and 'yCoord' in event_data['details']:
         ax.scatter(event_data['details']['xCoord'], event_data['details']['yCoord'], color="blue", s=100, zorder=5)
 
     y_min, y_max = plt.ylim()
@@ -72,53 +75,55 @@ def plot_game_event(game_data, event_number):
 
     plt.show()
 
-    # on affiche les données brute de l'évenement
+    # on affiche les données brutes de l'événement
     pprint.pprint(event_data)
+
 
 def get_home_team_initial_side(game_data):
     first_offensive_event = None
-    homeTeamId = game_data['homeTeam']['id']
+    home_team_id = game_data['homeTeam']['id']
 
     for event_data in game_data['plays']:
-        if('details' in event_data
+        if ('details' in event_data
                 and 'zoneCode' in event_data['details']
                 and event_data['details']['zoneCode'] == 'O'):
             first_offensive_event = event_data
             break
 
-    # l'attaque se fait du coté gauche
+    # l'attaque se fait du côté gauche
     if first_offensive_event['details']['xCoord'] < 0:
-        # le camp de l'équipe initiant l'attaque est du coté droit
-        if(first_offensive_event['details']['eventOwnerTeamId'] == homeTeamId):
+        # le camp de l'équipe initiant l'attaque est du côté droit
+        if first_offensive_event['details']['eventOwnerTeamId'] == home_team_id:
             home_team_side = 'right'
         else:
             home_team_side = 'left'
     else:
-        # le camp de l'équipe initiant l'attaque est du coté gauche
-        if (first_offensive_event['details']['eventOwnerTeamId'] == homeTeamId):
+        # le camp de l'équipe initiant l'attaque est du côté gauche
+        if first_offensive_event['details']['eventOwnerTeamId'] == home_team_id:
             home_team_side = 'left'
         else:
             home_team_side = 'right'
 
     return home_team_side
 
+
 def get_home_team_side(game_data, event_data):
     home_team_initial_side = get_home_team_initial_side(game_data)
 
-    # match de saison réguliere
-    if(game_data['gameType'] == 2):
-        # si pas en prolongation, on change de coté selon la période
+    # match de saison régulière
+    if game_data['gameType'] == 2:
+        # si pas en prolongation, on change de côté selon la période
         if event_data['periodDescriptor']['number'] <= 3:
-            # on change de coté quand la période est paire
+            # on change de côté quand la période est paire
             if event_data['periodDescriptor']['number'] % 2 == 0:
-                if (home_team_initial_side == 'left'):
+                if home_team_initial_side == 'left':
                     home_team_initial_side = 'right'
                 else:
                     home_team_initial_side = 'left'
     else:
         # on change de camp quand la période est paire
         if event_data['periodDescriptor']['number'] % 2 == 0:
-            if(home_team_initial_side == 'left'):
+            if home_team_initial_side == 'left':
                 home_team_initial_side = 'right'
             else:
                 home_team_initial_side = 'left'

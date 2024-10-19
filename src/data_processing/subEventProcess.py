@@ -2,7 +2,11 @@ import pandas as pd
 
 
 def process_period_data(df: pd.DataFrame) -> pd.DataFrame:
-    """Decompose periodDescriptor and return processed dataframe."""
+    """
+    Decompose periodDescriptor and return processed dataframe.
+    :param df: DataFrame containing 'periodDescriptor' column
+    :return: DataFrame containing 'periodType', 'number', 'maxRegulationPeriods', and 'currentPeriod' columns
+    """
 
     # Split 'periodDescriptor' into 'periodType', 'number', and 'maxRegulationPeriods'
     df_period = pd.DataFrame(df['periodDescriptor'].tolist())
@@ -17,7 +21,14 @@ def process_period_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def process_event_details(df: pd.DataFrame, df_players: pd.DataFrame) -> pd.DataFrame:
-    """Process event details and merge with player information."""
+    """
+    Process event details and merge player information.
+    :param df: DataFrame containing 'details' column
+    :param df_players: DataFrame containing player data
+    :return: DataFrame containing 'iceCoord', 'shootingPlayer', 'goaliePlayer', 'zoneShoot', and 'shotType' columns
+    """
+
+    # Split 'details' into 'iceCoord', 'shootingPlayerId', 'scoringPlayerId', and 'goalieInNetId'
     df_details = pd.DataFrame(df['details'].tolist())
 
     # Combine x and y coordinates into a tuple
@@ -41,7 +52,7 @@ def process_event_details(df: pd.DataFrame, df_players: pd.DataFrame) -> pd.Data
     df_details['shootingPlayer'] = df_details['firstName'] + ' ' + df_details['lastName']
     df_details.drop(['firstName', 'lastName'], axis=1, inplace=True)
 
-    # Add the goalies names by merging IDs
+    # Add the goalie names by merging IDs
     df_details = pd.merge(df_players, df_details, left_on='playerId', right_on='goalieInNetId', how='right').drop(
         columns=['playerId'])
 

@@ -1,2 +1,2 @@
-from src.visualisations.advancedVisualisation import *
-from src.visualisations.basicVisualisation import *
+from src.visualisations.advancedVisualisations import *
+from src.visualisations.basicVisualisations import *
