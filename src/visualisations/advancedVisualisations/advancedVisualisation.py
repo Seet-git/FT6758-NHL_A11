@@ -254,7 +254,7 @@ def smooth_heatmap(shot_data: pd.DataFrame, bandwidth=1.0, grid_size=100):
     plt.show()
 
 
-def interactive_smooth_heatmap(year: int, bandwidth=1.0, grid_size=150):
+def interactive_smooth_heatmap(year: int, bandwidth=1.0, grid_size=150, filename=None):
     """
     Cette fonction génère une carte de densité des tirs lissée de manière interactive pour chaque équipe
     d'une année donnée. Chaque équipe a une heatmap basée sur une estimation par noyau (KDE),
@@ -263,6 +263,7 @@ def interactive_smooth_heatmap(year: int, bandwidth=1.0, grid_size=150):
     :param year: Année pour laquelle générer les cartes de densité.
     :param bandwidth: Paramètre de lissage pour l'estimation par noyau (par défaut 1.0).
     :param grid_size: Taille de la grille pour générer la carte (par défaut 150).
+    :param filename: Nom du fichier HTML pour enregistrer la carte interactive (par défaut 'interactive_heatmap.html').
 
     :return: Rien : Affiche une carte interactive de densité des tirs lissée pour chaque équipe.
    """
@@ -374,6 +375,8 @@ def interactive_smooth_heatmap(year: int, bandwidth=1.0, grid_size=150):
         width=700,
         height=750
     )
+    if filename is not None:
+        fig.write_html(filename)
 
     fig.show()
 
