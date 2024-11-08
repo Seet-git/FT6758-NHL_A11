@@ -66,14 +66,10 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     dist_euclidian = lambda x1, x2: np.round(np.linalg.norm(np.array(x1 - x2)), decimals=1)
 
     # Add shot distance based on the ice coordinates
-    clean_df['shotDistance'] = clean_df.apply(
-        lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89]))if x['adjustedCoord'][1] > 0
-        else dist_euclidian(x['adjustedCoord'], np.array([0, -89])), axis=1)
+    clean_df['shotDistance'] = clean_df.apply(lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89])), axis=1)
 
     # Add a shot angle based on the ice coordinates
-    clean_df['shotAngle'] = clean_df.apply(
-        lambda x: angle_between_vectors(x['adjustedCoord'], np.array([0, 89])) if x['adjustedCoord'][1] > 0
-        else angle_between_vectors(x['adjustedCoord'], np.array([0, -89])), axis=1)
+    clean_df['shotAngle'] = clean_df.apply(lambda x: angle_between_vectors(x['adjustedCoord'], np.array([0, 89])), axis=1)
 
     clean_df.drop(columns=['adjustedCoord'], inplace=True)  # Drop the adjusted coordinates
 
