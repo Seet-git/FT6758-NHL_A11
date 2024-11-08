@@ -1,5 +1,6 @@
 import pandas as pd
 import seaborn as sns
+import numpy as np
 from matplotlib import pyplot as plt
 
 
@@ -79,3 +80,32 @@ def plot_boxplot_correlations(q, var1, var2, category):
     plt.legend(title=f'{category} status', loc='upper right')
     plt.grid(True)
     plt.show()
+
+
+def plot_goals_by_distance(data):
+    data = data[data['typeDescKey'] == 'goal']
+    data['Empty net'] = data['emptyGoalNet']
+
+    bins = np.linspace(data['shotDistance'].min(), data['shotDistance'].max(), 10)  # 4 intervalles, 5 bords
+    interval_labels = [f"{int(bins[i])}-{int(bins[i + 1])}" for i in range(len(bins) - 1)]
+    interval_centers = [(bins[i] + bins[i + 1]) / 2 for i in range(len(bins) - 1)]
+
+    # Créer l'histogramme
+    plt.figure(figsize=(10, 6))
+    sns.histplot(
+        data=data,
+        x="shotDistance",
+        hue="Empty net",
+        bins=bins,
+        multiple="dodge",
+        shrink=0.8
+    )
+
+    # Définir les étiquettes personnalisées de l'axe x
+    plt.xticks(interval_centers, interval_labels)
+    plt.xlabel("Distance au but (en pieds)") # TODO : vérifier l'unité de la distance
+    #plt.legend(title="Filet vide")
+    plt.title("Nombre de buts marqués entre les saisons 2016 et 2020 selon la distance au but")
+
+    plt.show()
+
