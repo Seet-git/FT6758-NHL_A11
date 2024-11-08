@@ -3,7 +3,7 @@ import pandas as pd
 from src.visualisations.advancedVisualisations.globals import team_shots_coords
 
 
-def get_coordinates(row: pd.Series, side: str) -> tuple:
+def get_coordinates(row: pd.Series, initial_side: str) -> tuple:
     """
     Cette fonction calcule les nouvelles coordonnées d'un tir en fonction de la période et du côté de la patinoire
     sur lequel l'équipe commence. Elle prend en compte les rotations des coordonnées en fonction du changement de côté
@@ -15,43 +15,33 @@ def get_coordinates(row: pd.Series, side: str) -> tuple:
     :return: tuple: Les nouvelles coordonnées après ajustement basé sur le côté et la période.
     """
 
-    previous_period = '1/3'
     new_coords = (0, 0)
     coords = row['iceCoord']
-    current_period = row['currentPeriod']
+    current_period_number = int(row['currentPeriod'].split('/')[0])
+    current_side = initial_side
 
-    # Si l'équipe est du côté gauche de la patinoire
-    if side == 'left':
-
-        # Si la période n'a pas changé
-        if current_period == previous_period:
-            new_coords = (coords[1], -coords[0])  # Faire une rotation des coordonnées de 90 degrés
-
-        # Si la période a changé
-        else:
-            previous_period = current_period  # Mettre à jour la période précédente
-
-            # Si ce n'est pas une prolongation pendant la saison régulière, mettre à jour le côté de l'équipe et faire la rotation.
-            if not (previous_period == '4/3' and str(row['idGame'])[4:6] == '02'):
-                # Changer de côté pour l'équipe et faire une rotation des coordonnées de -90 degrés
-                new_coords = (coords[1], -coords[0])
-
-    # Si l'équipe est du côté droit de la patinoire
+    # en saison réguliere, on change de cote seulement si on n'est pas en prolongation
+    if str(row['idGame'])[4:6] == '02' and current_period_number <= 3:
+        if(current_period_number % 2 == 0):
+            # on change le camp
+            if initial_side == 'left':
+                current_side = 'right'
+            else:
+                current_side = 'left'
     else:
+        if (current_period_number % 2 == 0):
+            # on change le camp
+            if initial_side == 'left':
+                current_side = 'right'
+            else:
+                current_side = 'left'
 
-        # Si la période n'a pas changé
-        if current_period == previous_period:
-            new_coords = (-coords[1], coords[0])  # Faire une rotation des coordonnées de -90 degrés
-
-        # Si la période a changé
-        else:
-
-            previous_period = current_period  # Mettre à jour la période précédente
-
-            # Si ce n'est pas une prolongation pendant la saison régulière, mettre à jour le côté de l'équipe et faire la rotation.
-            if not (previous_period == '4/3' and str(row['idGame'])[4:6] == '02'):
-                # Changer de côté pour l'équipe et faire une rotation des coordonnées de 90 degrés
-                new_coords = (coords[1], -coords[0])
+    if current_side == 'left':
+        # je fais une rotation de 90 degre dans le sens inverse des aiguilles d'une montre
+        new_coords = (-coords[1], coords[0])
+    else:
+        # je fais une rotation de 90 degre dans le sens des aiguilles d'une montre
+        new_coords = (coords[1], -coords[0])
 
     return new_coords
 
