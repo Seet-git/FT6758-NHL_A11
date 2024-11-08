@@ -37,8 +37,10 @@ def get_coordinates(row: pd.Series, initial_side: str) -> tuple:
                 current_side = 'left'
 
     if current_side == 'left':
+        # je fais une rotation de 90 degre dans le sens inverse des aiguilles d'une montre
         new_coords = (-coords[1], coords[0])
     else:
+        # je fais une rotation de 90 degre dans le sens des aiguilles d'une montre
         new_coords = (coords[1], -coords[0])
 
     return new_coords
