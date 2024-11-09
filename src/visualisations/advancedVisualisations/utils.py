@@ -3,7 +3,7 @@ import pandas as pd
 from src.visualisations.advancedVisualisations.globals import team_shots_coords
 
 
-def get_coordinates(row: pd.Series, initial_side: str) -> tuple:
+def get_coordinates(row: pd.Series, home_team_initial_side: str) -> tuple:
     """
     Cette fonction calcule les nouvelles coordonnées d'un tir en fonction de la période et du côté de la patinoire
     sur lequel l'équipe commence. Elle prend en compte les rotations des coordonnées en fonction du changement de côté
@@ -14,6 +14,17 @@ def get_coordinates(row: pd.Series, initial_side: str) -> tuple:
 
     :return: tuple: Les nouvelles coordonnées après ajustement basé sur le côté et la période.
     """
+
+    initial_side = None
+
+    if(row['teamSide'] == 'home'):
+        initial_side = home_team_initial_side
+    else:
+        if home_team_initial_side == 'left':
+            initial_side = 'right'
+        else:
+            initial_side = 'left'
+
 
     new_coords = (0, 0)
     coords = row['iceCoord']

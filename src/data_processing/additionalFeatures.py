@@ -47,12 +47,12 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     coords_list = []  # List to store the updated coordinates as tuples
 
     # Finding on which side the team is starting the game
-    first_offensive_zone_event = clean_df[clean_df['zoneShoot'] == 'O'].iloc[0]
-    side = 'right' if first_offensive_zone_event['iceCoord'][0] < 0 else 'left'
+    first_home_team_offensive_event = clean_df[(clean_df['zoneShoot'] == 'O') & (clean_df['teamSide'] == 'home')].iloc[0]
+    home_team_initial_side = 'right' if first_home_team_offensive_event['iceCoord'][0] < 0 else 'left'
 
     for _, row in clean_df.iterrows():
         # Calculer les nouvelles coordonnées selon le côté et la période
-        new_coords = get_coordinates(row, side)
+        new_coords = get_coordinates(row, home_team_initial_side)
         coords_list.append(new_coords)  # Stocker les coordonnées ajustées
 
     # Ajouter les nouvelles coordonnées à la DataFrame
@@ -66,10 +66,9 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     dist_euclidian = lambda x1, x2: np.round(np.linalg.norm(np.array(x1 - x2)), decimals=1)
 
     # Add shot distance based on the ice coordinates
-    clean_df['shotDistance'] = clean_df.apply(
-        lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89]))if x['adjustedCoord'][1] > 0
-        else dist_euclidian(x['adjustedCoord'], np.array([0, -89])), axis=1)
+    clean_df['shotDistance'] = clean_df.apply(lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89])), axis=1)
 
+    # TODO : TO ADJUST
     # Add a shot angle based on the ice coordinates
     clean_df['shotAngle'] = clean_df.apply(
         lambda x: angle_between_vectors(x['adjustedCoord'], np.array([0, 89])) if x['adjustedCoord'][1] > 0
