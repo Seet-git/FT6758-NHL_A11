@@ -416,3 +416,28 @@ def estimation_kde_noyau_gaussien(year, mean_df):
     plt.xlabel("Taux de tir moyen par heure")
     plt.ylabel("Densité")
     plt.show()
+
+
+## Milestone-2 by Youry
+def histogram_2_variables(df, x, hue, bins, xlabel, ylabel, title, legendTitle, legendLabels):
+    plt.figure(figsize=(10, 6))
+    sns.histplot(data=df, x=x, hue=hue, bins=bins, multiple='stack')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.legend(title=legendTitle, labels=legendLabels)
+    plt.show()
+
+## Milestone-2 by Youry
+## Histogramme 2D
+def histogram2D_2_variables_seaborn(df, x, y, kind, title, xlabel, ylabel):
+    # Remove rows with NaN values
+    # df = df.dropna(subset=[x, y])
+    # Jointplot to visualize the 2D histogram
+    sns.jointplot(data=df, x=x, y=y, kind=kind, cmap='Blues')
+    # Add title and labels
+    plt.suptitle(title, fontsize=16)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    # Show the plot
+    plt.show()
