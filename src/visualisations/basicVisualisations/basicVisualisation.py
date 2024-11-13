@@ -2,6 +2,7 @@ import pandas as pd
 import seaborn as sns
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.ticker import MultipleLocator
 
 
 def plot_correlations_2variables(q, stat1, stat2):
@@ -91,7 +92,7 @@ def plot_goals_by_distance(data):
     interval_centers = [(bins[i] + bins[i + 1]) / 2 for i in range(len(bins) - 1)]
 
     # Créer l'histogramme
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 9))
     sns.histplot(
         data=data,
         x="shotDistance",
@@ -101,11 +102,16 @@ def plot_goals_by_distance(data):
         shrink=0.8
     )
 
+    ax = plt.gca()
+    ax.yaxis.set_major_locator(MultipleLocator(500))
+
     # Définir les étiquettes personnalisées de l'axe x
     plt.xticks(interval_centers, interval_labels)
-    plt.xlabel("Distance au but (en pieds)") # TODO : vérifier l'unité de la distance
+    plt.ylabel('Nombre de buts')
+    plt.xlabel("Distance au filet (en pieds)")
     #plt.legend(title="Filet vide")
-    plt.title("Nombre de buts marqués entre les saisons 2016 et 2020 selon la distance au but")
+    plt.legend(title="Filet vide", labels=['Non', 'Oui'])
+    plt.title("Nombre de buts marqués entre les saisons 2016 et 2020 selon la distance au filet")
 
     plt.show()
 

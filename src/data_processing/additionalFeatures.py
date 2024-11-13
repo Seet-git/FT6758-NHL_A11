@@ -68,11 +68,11 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     # Add shot distance based on the ice coordinates
     clean_df['shotDistance'] = clean_df.apply(lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89])), axis=1)
 
-    # TODO : TO ADJUST
     # Add a shot angle based on the ice coordinates
+    # x['adjustedCoord']-np.array([0,89]) calcule les coordonées du vecteur qui commence aux filets et s'arrête à la l'emplacement du tirs
+    # np.array([0, -89]) est le vecteur qui commence dans filets et s'arrête au centre du stade/de la patinoire
     clean_df['shotAngle'] = clean_df.apply(
-        lambda x: angle_between_vectors(x['adjustedCoord'], np.array([0, 89])) if x['adjustedCoord'][1] > 0
-        else angle_between_vectors(x['adjustedCoord'], np.array([0, -89])), axis=1)
+        lambda x: angle_between_vectors(x['adjustedCoord']-np.array([0,89]), np.array([0, -89])), axis=1)
 
     clean_df.drop(columns=['adjustedCoord'], inplace=True)  # Drop the adjusted coordinates
 
