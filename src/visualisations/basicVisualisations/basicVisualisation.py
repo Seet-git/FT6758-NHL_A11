@@ -110,7 +110,7 @@ def plot_goals_by_distance(data):
     plt.ylabel('Nombre de buts')
     plt.xlabel("Distance au filet (en pieds)")
     #plt.legend(title="Filet vide")
-    plt.legend(title="Filet vide", labels=['Non', 'Oui'])
+    plt.legend(title="Filet vide", labels=['Oui', 'Non'])
     plt.title("Nombre de buts marqués entre les saisons 2016 et 2020 selon la distance au filet")
 
     plt.show()
