@@ -45,6 +45,7 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
 
     # List to store the updated coordinates as tuples
     coords_list = []  # List to store the updated coordinates as tuples
+    coords_last_event_list = []
 
     # Finding on which side the team is starting the game
     first_home_team_offensive_event = clean_df[(clean_df['zoneShoot'] == 'O') & (clean_df['teamSide'] == 'home')].iloc[
@@ -53,25 +54,27 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
 
     for _, row in clean_df.iterrows():
         # Calculer les nouvelles coordonnées selon le côté et la période
-        new_coords = get_coordinates(row, home_team_initial_side)
+        new_coords, new_last_event_coord = get_coordinates(row, home_team_initial_side)
         coords_list.append(new_coords)  # Stocker les coordonnées ajustées
+        coords_last_event_list.append(new_last_event_coord)
 
     # Ajouter les nouvelles coordonnées à la DataFrame
     clean_df['adjustedCoord'] = coords_list
+    clean_df['adjustedLastEventCoord'] = coords_last_event_list
 
     # ADDITIONAL FEATURES
 
     # Add shot distance
 
     # Define the Euclidian distance function
-    dist_euclidian = lambda x1, x2: np.round(np.linalg.norm(np.array(x1 - x2)), decimals=1)
+    dist_euclidian = lambda x1, x2: np.round(np.linalg.norm(np.array(x1) - np.array(x2)), decimals=1)
 
     # Add shot distance based on the ice coordinates
     clean_df['shotDistance'] = clean_df.apply(lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89])), axis=1)
 
     # Add distance from the last event
     clean_df['distanceFromLastEvent'] = clean_df.apply(
-            lambda x: dist_euclidian(np.array([x['previousXCoord'], x["previousYCoord"]]), np.array([x['xCoord'], x['yCoord']]))
+            lambda x: dist_euclidian(x['adjustedCoord'], x['adjustedLastEventCoord'])
             if not pd.isnull(x['previousXCoord']) else None, axis=1)
 
     # Add rebound information
@@ -85,7 +88,9 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     clean_df['shotAngle'] = clean_df.apply(
         lambda x: angle_between_vectors(x['adjustedCoord'] - np.array([0, 89]), np.array([0, -89])), axis=1)
 
-    clean_df.drop(columns=['adjustedCoord'], inplace=True)  # Drop the adjusted coordinates
+    # Drop the adjusted coordinates
+    clean_df.drop(columns=['adjustedCoord'], inplace=True)
+    clean_df.drop(columns=['adjustedLastEventCoord'], inplace=True)
 
     # Add time before the last shot to observe the offensive pressure
 

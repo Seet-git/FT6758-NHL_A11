@@ -3,7 +3,7 @@ import pandas as pd
 from src.visualisations.advancedVisualisations.globals import team_shots_coords
 
 
-def get_coordinates(row: pd.Series, home_team_initial_side: str) -> tuple:
+def get_coordinates(row: pd.Series, home_team_initial_side: str) -> list:
     """
     Cette fonction calcule les nouvelles coordonnées d'un tir en fonction de la période et du côté de la patinoire
     sur lequel l'équipe commence. Elle prend en compte les rotations des coordonnées en fonction du changement de côté
@@ -26,7 +26,7 @@ def get_coordinates(row: pd.Series, home_team_initial_side: str) -> tuple:
             initial_side = 'left'
 
 
-    new_coords = (0, 0)
+    new_coords = [(0, 0), (0,0)]
     current_period_number = int(row['currentPeriod'].split('/')[0])
     current_side = initial_side
 
@@ -48,10 +48,10 @@ def get_coordinates(row: pd.Series, home_team_initial_side: str) -> tuple:
 
     if current_side == 'left':
         # je fais une rotation de 90 degre dans le sens inverse des aiguilles d'une montre
-        new_coords = (-row['yCoord'], row['xCoord'])
+        new_coords = [(-row['yCoord'], row['xCoord']), (-row['previousYCoord'], row['previousXCoord'])]
     else:
         # je fais une rotation de 90 degre dans le sens des aiguilles d'une montre
-        new_coords = (row['yCoord'], -row['xCoord'])
+        new_coords = [(row['yCoord'], -row['xCoord']), (row['previousYCoord'], -row['previousXCoord'])]
 
     return new_coords
 
