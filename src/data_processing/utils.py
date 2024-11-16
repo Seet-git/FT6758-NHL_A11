@@ -39,12 +39,12 @@ def minutes_to_seconds(df: pd.DataFrame, column: str) -> pd.Series:
     # Split columns into 'minutes' and 'seconds' and 'number of period' as integer
     df['minutes'] = df[column].str.split(':').str[0].astype(int)
     df['seconds'] = df[column].str.split(':').str[1].astype(int)
-    df['numberPeriod'] = df['currentPeriod'].str.split("/").str[0].astype(int)
+    df['numberPeriod'] = df['numberPeriod'].astype(int)
 
     # Total in seconds
     df[column] = df['minutes'] * 60 + df['seconds'] + 20 * 60 * (df['numberPeriod'] - 1)
 
     # Drop columns
-    df.drop(['minutes', 'seconds', 'numberPeriod'], axis=1, inplace=True)
+    df.drop(['minutes', 'seconds'], axis=1, inplace=True)
 
     return df[column]

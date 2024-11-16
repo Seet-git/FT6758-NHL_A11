@@ -74,7 +74,6 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
 
     # Drop situation code
     clean_df.drop('situationCode', axis=1, inplace=True)
-
     return clean_df
 
 
