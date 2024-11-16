@@ -29,7 +29,7 @@ def angle_between_vectors(v1: np.array, v2: np.array) -> float:
     cos_angle = np.clip(cos_angle, -1.0, 1.0)
 
     # Angle in radians
-    angle_radians = np.arccos(cos_angle)
+    angle_radians = np.arccos(abs(cos_angle))
 
     # Convert the angle to degrees
     angle_degrees = np.degrees(angle_radians)
@@ -74,19 +74,31 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
 
     # Add distance from the last event
     clean_df['distanceFromLastEvent'] = clean_df.apply(
-            lambda x: dist_euclidian(x['adjustedCoord'], x['adjustedLastEventCoord'])
-            if not pd.isnull(x['previousXCoord']) else None, axis=1)
+        lambda x: dist_euclidian(x1=(x['xCoord'], x['yCoord'])
+                                 , x2=(x['previousXCoord'], x['previousYCoord']))
+        if not pd.isnull(x['previousXCoord']) else None, axis=1)
 
     # Add rebound information
     clean_df['rebound'] = clean_df.apply(lambda x:
-       True if x['previousEvent'] == 'shot-on-goal' else False, axis=1
-    )
+                                         True if x['previousEventType'] == 'shot-on-goal' else False, axis=1
+                                         )
+
+    # Add speed
+    clean_df['speedFromLastEvent'] = clean_df.apply(lambda x:
+                                       x['distanceFromLastEvent'] / x['timeSinceLastEvent']
+                                       if x['timeSinceLastEvent'] != 0 else 0
+                                       , axis=1)
 
     # Add a shot angle based on the ice coordinates
     # x['adjustedCoord']-np.array([0,89]) calcule les coordonnées du vecteur qui commence aux filets et s'arrête à l'emplacement du tirs
     # np.array([0, -89]) est le vecteur qui commence dans les filets et s'arrête au centre du stade/de la patinoire
     clean_df['shotAngle'] = clean_df.apply(
         lambda x: angle_between_vectors(x['adjustedCoord'] - np.array([0, 89]), np.array([0, -89])), axis=1)
+
+    # Previous shot angle
+    clean_df['reboundAngleShot'] = clean_df.apply(
+        lambda x: angle_between_vectors(x['adjustedLastEventCoord'] - np.array([0, 89]), np.array([0, -89]) + x['shotAngle']
+        if x['rebound'] else 0), axis=1)
 
     # Drop the adjusted coordinates
     clean_df.drop(columns=['adjustedCoord'], inplace=True)
@@ -95,12 +107,10 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     # Add time before the last shot to observe the offensive pressure
 
     # Sort the dataframe by the period to calculate the time since the last shot
-    clean_df['timeSinceLastShot'] = clean_df.groupby('eventOwnerTeam')['Game Seconds'].diff()
+    clean_df['offensivePressure'] = clean_df.groupby('eventOwnerTeam')['Game Seconds'].diff()
 
     # Convert the time to minutes and seconds
-    clean_df['timeSinceLastShot'] = clean_df.apply(lambda x: 0
-    if pd.isnull(x['timeSinceLastShot']) else x['timeSinceLastShot'], axis=1)
-
-    # Add
+    clean_df['offensivePressure'] = clean_df.apply(lambda x: 0
+    if pd.isnull(x['offensivePressure']) else x['offensivePressure'], axis=1)
 
     return clean_df

@@ -17,6 +17,8 @@ def process_period_data(df: pd.DataFrame) -> pd.DataFrame:
     # Add 'currentPeriod' column
     df_period['currentPeriod'] = df_period['number'] + '/' + df_period['maxRegulationPeriods']
 
+    df_period['numberPeriod'] = df_period['numberPeriod']
+
     return df_period
 
 
@@ -63,7 +65,7 @@ def process_previous_event(df: pd.DataFrame):
     # Décale le dataframe pour récupérer l'élément précédent
     df_copy = df.copy().shift(1)
     # Get previous event
-    df['previousEvent'] = df_copy['typeDescKey']
+    df['previousEventType'] = df_copy['typeDescKey']
 
     # Get previous time
     df['timeSinceLastEvent'] = df['Game Seconds'].diff()

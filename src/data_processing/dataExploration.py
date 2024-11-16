@@ -33,10 +33,12 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
     clean_df.insert(0, 'idGame', game_nhl['id'])
     clean_df.insert(1, 'periodType', df_period['periodType'])
     clean_df.insert(2, 'currentPeriod', df_period['currentPeriod'])
+    clean_df.insert(3, 'numberPeriod', df_period['numberPeriod'])
 
     # TIME IN PERIOD
     # Convert time in the period to seconds
     clean_df['Game Seconds'] = minutes_to_seconds(clean_df, 'timeInPeriod')
+    clean_df.drop('timeInPeriod', axis=1, inplace=True)
 
     clean_df = process_previous_event(clean_df)
 
