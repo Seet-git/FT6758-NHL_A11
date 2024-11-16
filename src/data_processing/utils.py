@@ -8,7 +8,8 @@ def calculate_empty_goal_net(df: pd.DataFrame) -> pd.Series:
     :return: Series containing boolean values
     """
 
-    return df.apply(lambda x: x['situationCode'][3] if x['teamSide'] == 'away' else x['situationCode'][0], axis=1).map(
+    return df.apply(lambda x: x['situationCode'][3] if x['teamSide'] == 'away' else x['situationCode'][0] if len(x['situationCode']) == 4 else 0
+                    , axis=1).map(
         {'0': True, '1': False})
 
 

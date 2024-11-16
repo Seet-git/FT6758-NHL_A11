@@ -48,7 +48,7 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
 
     # Finding on which side the team is starting the game
     first_home_team_offensive_event = clean_df[(clean_df['zoneShoot'] == 'O') & (clean_df['teamSide'] == 'home')].iloc[0]
-    home_team_initial_side = 'right' if first_home_team_offensive_event['iceCoord'][0] < 0 else 'left'
+    home_team_initial_side = 'right' if first_home_team_offensive_event['xCoord'] < 0 else 'left'
 
     for _, row in clean_df.iterrows():
         # Calculer les nouvelles coordonnées selon le côté et la période
@@ -69,8 +69,8 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     clean_df['shotDistance'] = clean_df.apply(lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89])), axis=1)
 
     # Add a shot angle based on the ice coordinates
-    # x['adjustedCoord']-np.array([0,89]) calcule les coordonées du vecteur qui commence aux filets et s'arrête à la l'emplacement du tirs
-    # np.array([0, -89]) est le vecteur qui commence dans filets et s'arrête au centre du stade/de la patinoire
+    # x['adjustedCoord']-np.array([0,89]) calcule les coordonnées du vecteur qui commence aux filets et s'arrête à l'emplacement du tirs
+    # np.array([0, -89]) est le vecteur qui commence dans les filets et s'arrête au centre du stade/de la patinoire
     clean_df['shotAngle'] = clean_df.apply(
         lambda x: angle_between_vectors(x['adjustedCoord']-np.array([0,89]), np.array([0, -89])), axis=1)
 
@@ -79,12 +79,10 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     # Add time before the last shot to observe the offensive pressure
 
     # Sort the dataframe by the period to calculate the time since the last shot
-    clean_df['timeSinceLastShot'] = clean_df.groupby('eventOwnerTeam')['timeInPeriod'].diff()
+    clean_df['timeSinceLastShot'] = clean_df.groupby('eventOwnerTeam')['Game Seconds'].diff()
 
     # Convert the time to minutes and seconds
-    clean_df['timeSinceLastShot'] = clean_df['timeSinceLastShot'].dt.total_seconds()  # Convert to seconds
-    clean_df['timeSinceLastShot'] = clean_df.apply(lambda x: "0:00"
-    if pd.isnull(x['timeSinceLastShot']) else
-    f"{int(x['timeSinceLastShot'] // 60)}:{int(x['timeSinceLastShot'] % 60):02d}", axis=1)  # 02d: 2 digits
+    clean_df['timeSinceLastShot'] = clean_df.apply(lambda x: 0
+        if pd.isnull(x['timeSinceLastShot']) else x['timeSinceLastShot'], axis=1)
 
     return clean_df

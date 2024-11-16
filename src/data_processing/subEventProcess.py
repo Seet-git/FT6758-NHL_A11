@@ -31,9 +31,6 @@ def process_event_details(df: pd.DataFrame, df_players: pd.DataFrame) -> pd.Data
     # Split 'details' into 'iceCoord', 'shootingPlayerId', 'scoringPlayerId', and 'goalieInNetId'
     df_details = pd.DataFrame(df['details'].tolist())
 
-    # Combine x and y coordinates into a tuple
-    df_details['iceCoord'] = df_details[['xCoord', 'yCoord']].apply(tuple, axis=1)
-
     # Merge 'shooting' and 'scoring' player, to keep only one column
     df_details['shootingPlayerId'] = df_details['shootingPlayerId'].fillna(0) + df_details['scoringPlayerId'].fillna(0)
 
@@ -61,3 +58,22 @@ def process_event_details(df: pd.DataFrame, df_players: pd.DataFrame) -> pd.Data
     df_details.drop(['firstName', 'lastName'], axis=1, inplace=True)
 
     return df_details
+
+def process_previous_event(df: pd.DataFrame):
+    # Décale le dataframe pour récupérer l'élément précédent
+    df_copy = df.copy().shift(1)
+    # Get previous event
+    df['previousEvent'] = df_copy['typeDescKey']
+
+    # Get previous time
+    df['timeSinceLastEvent'] = df['Game Seconds'].diff()
+    df['timeSinceLastEvent'] = df.apply(lambda x: 0
+    if pd.isnull(x['timeSinceLastEvent']) else abs(x['timeSinceLastEvent']), axis=1) #Abs to prevent some error or negative time
+
+    # Get previous coordinates
+    details = df_copy['details'].apply(pd.Series)
+    df["previousXCoord"] = details['xCoord']
+    df["previousYCoord"] = details['yCoord']
+
+    return df
+

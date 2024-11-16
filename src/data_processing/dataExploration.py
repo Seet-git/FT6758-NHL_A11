@@ -1,3 +1,5 @@
+import pandas as pd
+
 from src.data_processing.additionalFeatures import *
 from src.data_processing.extractRoster import *
 from src.data_processing.subEventProcess import *
@@ -33,29 +35,27 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
     clean_df.insert(2, 'currentPeriod', df_period['currentPeriod'])
 
     # TIME IN PERIOD
-    # Parse the game's start time to UTC
-    start_time = pd.to_datetime(game_nhl['startTimeUTC'])
-
     # Convert time in the period to seconds
-    time_series = start_time + pd.to_timedelta(minutes_to_seconds(clean_df, 'timeInPeriod'), unit='s')
+    clean_df['Game Seconds'] = minutes_to_seconds(clean_df, 'timeInPeriod')
 
-    # add it to the game start time
-    clean_df['timeInPeriod'] = time_series
+    clean_df = process_previous_event(clean_df)
 
+    # DETAILS
     # Filter to keep only events of type 'shot-on-goal' or 'goal'
     clean_df = clean_df[(clean_df['typeDescKey'] == 'shot-on-goal') | (clean_df['typeDescKey'] == 'goal')].reset_index(
         drop=True)
 
-    # DETAILS
     # Process event details and merge player information
     df_details = process_event_details(clean_df, df_players)
     clean_df.drop('details', axis=1, inplace=True)
+
 
     # Add team data by merging IDs
     df_details = pd.merge(df_teams, df_details, left_on='teamId', right_on='eventOwnerTeamId', how='right')
 
     # Add the extracted data to the new dataframe
-    clean_df['iceCoord'] = df_details['iceCoord']
+    clean_df['xCoord'] = df_details['xCoord']
+    clean_df['yCoord'] = df_details['yCoord']
     clean_df['zoneShoot'] = df_details['zoneCode']
     clean_df['shootingPlayer'] = df_details['shootingPlayer']
     clean_df['goaliePlayer'] = df_details['goaliePlayer']

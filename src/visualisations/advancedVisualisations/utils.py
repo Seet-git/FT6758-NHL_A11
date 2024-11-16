@@ -27,7 +27,6 @@ def get_coordinates(row: pd.Series, home_team_initial_side: str) -> tuple:
 
 
     new_coords = (0, 0)
-    coords = row['iceCoord']
     current_period_number = int(row['currentPeriod'].split('/')[0])
     current_side = initial_side
 
@@ -49,10 +48,10 @@ def get_coordinates(row: pd.Series, home_team_initial_side: str) -> tuple:
 
     if current_side == 'left':
         # je fais une rotation de 90 degre dans le sens inverse des aiguilles d'une montre
-        new_coords = (-coords[1], coords[0])
+        new_coords = (-row['yCoord'], row['xCoord'])
     else:
         # je fais une rotation de 90 degre dans le sens des aiguilles d'une montre
-        new_coords = (coords[1], -coords[0])
+        new_coords = (row['yCoord'], -row['xCoord'])
 
     return new_coords
 
