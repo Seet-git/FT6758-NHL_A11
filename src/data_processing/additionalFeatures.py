@@ -47,7 +47,8 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     coords_list = []  # List to store the updated coordinates as tuples
 
     # Finding on which side the team is starting the game
-    first_home_team_offensive_event = clean_df[(clean_df['zoneShoot'] == 'O') & (clean_df['teamSide'] == 'home')].iloc[0]
+    first_home_team_offensive_event = clean_df[(clean_df['zoneShoot'] == 'O') & (clean_df['teamSide'] == 'home')].iloc[
+        0]
     home_team_initial_side = 'right' if first_home_team_offensive_event['xCoord'] < 0 else 'left'
 
     for _, row in clean_df.iterrows():
@@ -68,11 +69,21 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     # Add shot distance based on the ice coordinates
     clean_df['shotDistance'] = clean_df.apply(lambda x: dist_euclidian(x['adjustedCoord'], np.array([0, 89])), axis=1)
 
+    # Add distance from the last event
+    clean_df['distanceFromLastEvent'] = clean_df.apply(
+            lambda x: dist_euclidian(np.array([x['previousXCoord'], x["previousYCoord"]]), np.array([x['xCoord'], x['yCoord']]))
+            if not pd.isnull(x['previousXCoord']) else None, axis=1)
+
+    # Add rebound information
+    clean_df['rebound'] = clean_df.apply(lambda x:
+       True if x['previousEvent'] == 'shot-on-goal' else False, axis=1
+    )
+
     # Add a shot angle based on the ice coordinates
     # x['adjustedCoord']-np.array([0,89]) calcule les coordonnées du vecteur qui commence aux filets et s'arrête à l'emplacement du tirs
     # np.array([0, -89]) est le vecteur qui commence dans les filets et s'arrête au centre du stade/de la patinoire
     clean_df['shotAngle'] = clean_df.apply(
-        lambda x: angle_between_vectors(x['adjustedCoord']-np.array([0,89]), np.array([0, -89])), axis=1)
+        lambda x: angle_between_vectors(x['adjustedCoord'] - np.array([0, 89]), np.array([0, -89])), axis=1)
 
     clean_df.drop(columns=['adjustedCoord'], inplace=True)  # Drop the adjusted coordinates
 
@@ -83,6 +94,8 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
 
     # Convert the time to minutes and seconds
     clean_df['timeSinceLastShot'] = clean_df.apply(lambda x: 0
-        if pd.isnull(x['timeSinceLastShot']) else x['timeSinceLastShot'], axis=1)
+    if pd.isnull(x['timeSinceLastShot']) else x['timeSinceLastShot'], axis=1)
+
+    # Add
 
     return clean_df
