@@ -17,7 +17,7 @@ def process_period_data(df: pd.DataFrame) -> pd.DataFrame:
     # Add 'currentPeriod' column
     df_period['currentPeriod'] = df_period['number'] + '/' + df_period['maxRegulationPeriods']
 
-    df_period['numberPeriod'] = df_period['numberPeriod']
+    df_period['numberPeriod'] = df_period['number']
 
     return df_period
 
