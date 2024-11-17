@@ -11,4 +11,9 @@ altair
 networkx
 streamlit
 scipy
-wandb
+wandb~=0.18.3
+torch~=2.5.1
+optuna~=4.1.0
+pytz~=2024.1
+pymysql
+cryptography==43.0.3
