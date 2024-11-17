@@ -113,8 +113,8 @@ def evaluation(hp, save_file=False, n_splits=5):
     if isinstance(hp, dict):
         hp = SimpleNamespace(**hp)
 
-    X_train = config.INPUTS_DOCUMENTS
-    X_test = config.TEST_DOCUMENTS
+    X_train = config.INPUTS_DATA
+    X_test = config.TEST_DATA
 
     # K-fold
     kf = KFold(n_splits=n_splits, shuffle=True, random_state=1)
@@ -130,14 +130,14 @@ def evaluation(hp, save_file=False, n_splits=5):
     for train_index, val_index in kf.split(X_train):
         # Inputs and labels
         inputs_train, inputs_val = X_train[train_index], X_train[val_index]
-        labels_train, labels_val = config.LABELS_DOCUMENTS[train_index], config.LABELS_DOCUMENTS[val_index]
+        labels_train, labels_val = config.LABELS_DATA[train_index], config.LABELS_DATA[val_index]
 
         # Set model
         model = get_model(X_train.shape[1], hp)
 
         # Compute weight difference to balance
-        class_0_count = (config.LABELS_DOCUMENTS == 0).sum()
-        class_1_count = (config.LABELS_DOCUMENTS == 1).sum()
+        class_0_count = (config.LABELS_DATA == 0).sum()
+        class_1_count = (config.LABELS_DATA == 1).sum()
         weight = torch.tensor([class_0_count / class_1_count - hp.minority_weight], dtype=torch.float32).to(
             config.DEVICE)
         weight = torch.clamp(weight, min=1.0)

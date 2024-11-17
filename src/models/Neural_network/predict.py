@@ -15,7 +15,7 @@ def predict():
 
     print(f"F1 score moyen obtenu : {mean_f1_score:.4f}")
 
-    save_model_predictions(model, X_test, threshold=hyperparameters.infer_threshold,
+    return save_model_predictions(model, X_test, threshold=hyperparameters.infer_threshold,
                            batch_size=hyperparameters.batch_size)
 
 
@@ -45,3 +45,4 @@ def save_model_predictions(model, data_test, threshold, batch_size):
     df_pred['label'] = df_pred['label'].astype(int)
     df_pred.index.name = 'ID'
     df_pred.to_csv(f'./{config.PREDICTION_PATH}/{config.ALGORITHM}/{config.PREDICTION_FILENAME}.csv')
+    return pd.DataFrame(predictions)

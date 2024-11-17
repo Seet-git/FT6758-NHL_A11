@@ -57,9 +57,9 @@ PREDICTION_PATH = "./output"
 # --------------------------------------------------------------
 # INTERNAL VARIABLES (DO NOT MODIFY)
 # --------------------------------------------------------------
-INPUTS_DOCUMENTS = None
-LABELS_DOCUMENTS = None
-TEST_DOCUMENTS = None
+INPUTS_DATA = None
+LABELS_DATA = None
+TEST_DATA = None
 VOCAB = None
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 LOG_PATH = "./src/models/Neural_network/logs"

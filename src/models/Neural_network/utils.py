@@ -70,7 +70,7 @@ def plot_all_visualizations(y_true_list, y_scores_list, y_pred_list):
     plt.ylabel('Taux vrai positif')
     plt.title('ROC Curve - Tous les folds')
     plt.legend(loc="lower right")
-    plt.savefig(f"./images/plots/{config.ALGORITHM}/{config.PREDICTION_FILENAME}_roc_curve.svg", format="svg")
+    plt.savefig(f"./images/{config.ALGORITHM}/{config.PREDICTION_FILENAME}_roc_curve.svg", format="svg")
     plt.show()
 
     # Courbes de Précision-Rappel

@@ -19,4 +19,5 @@ def predict_data(model_name: str):
     config.OUTPUT_HP_FILENAME = f"hp_{model_name}"
     config.INPUT_HP_FILENAME = f"hp_{model_name}"
     config.ALGORITHM = model_name
-    predict()
+    return predict()
+
