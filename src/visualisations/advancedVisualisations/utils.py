@@ -27,19 +27,18 @@ def get_coordinates(row: pd.Series, home_team_initial_side: str) -> list:
 
 
     new_coords = [(0, 0), (0,0)]
-    current_period_number = int(row['currentPeriod'].split('/')[0])
     current_side = initial_side
 
     # en saison réguliere, on change de cote seulement si on n'est pas en prolongation
-    if str(row['idGame'])[4:6] == '02' and current_period_number <= 3:
-        if(current_period_number % 2 == 0):
+    if str(row['idGame'])[4:6] == '02' and row['numberPeriod'] <= 3:
+        if row['numberPeriod'] % 2 == 0:
             # on change le camp
             if initial_side == 'left':
                 current_side = 'right'
             else:
                 current_side = 'left'
     else:
-        if (current_period_number % 2 == 0):
+        if row['numberPeriod'] % 2 == 0:
             # on change le camp
             if initial_side == 'left':
                 current_side = 'right'

@@ -32,7 +32,6 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
     # Add 'gameID', 'periodType' and 'currentPeriod' columns to the new dataframe
     clean_df.insert(0, 'idGame', game_nhl['id'])
     clean_df.insert(1, 'periodType', df_period['periodType'])
-    clean_df.insert(2, 'currentPeriod', df_period['currentPeriod'])
     clean_df.insert(3, 'numberPeriod', df_period['numberPeriod'])
 
     # TIME IN PERIOD
