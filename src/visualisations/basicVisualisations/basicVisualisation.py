@@ -112,7 +112,8 @@ def plot_goals_by_distance(data):
     plt.legend(title="Filet vide", labels=['Oui', 'Non'])
     plt.title("Nombre de buts marqués entre les saisons 2016 et 2020 selon la distance au filet")
 
-    plt.savefig("C:/Users/franc/Documents/etudes univ/Udem/automne 2024/IFT6758 - Science de données/projet_NHL/IFT6758-NHL_A11/blogpost-template-main/public/goals_by_distance_milestone2.png",
-                dpi=300, bbox_inches='tight')  # Sauvegarde avec haute résolution
+    # plt.savefig("C:/Users/franc/Documents/etudes univ/Udem/automne 2024/IFT6758 - Science de données/projet_NHL/IFT6758-NHL_A11/blogpost-template-main/public/goals_by_distance_milestone2.png",
+    #           dpi=300, bbox_inches='tight')
+
     plt.show()
 
