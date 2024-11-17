@@ -29,7 +29,7 @@ def angle_between_vectors(v1: np.array, v2: np.array) -> float:
     cos_angle = np.clip(cos_angle, -1.0, 1.0)
 
     # Angle in radians
-    angle_radians = np.arccos(abs(cos_angle))
+    angle_radians = np.arccos(cos_angle)
 
     # Convert the angle to degrees
     angle_degrees = np.degrees(angle_radians)
