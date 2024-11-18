@@ -36,7 +36,7 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
 
     # TIME IN PERIOD
     # Convert time in the period to seconds
-    clean_df['Game Seconds'] = minutes_to_seconds(clean_df, 'timeInPeriod')
+    clean_df['gameSeconds'] = minutes_to_seconds(clean_df, 'timeInPeriod')
     clean_df.drop('timeInPeriod', axis=1, inplace=True)
 
     clean_df = process_previous_event(clean_df)
@@ -65,8 +65,10 @@ def convert_game_to_dataframe(game_nhl: dict) -> pd.DataFrame:
     clean_df['teamSide'] = df_details['teamSide']
 
     # Calculate emptyGoalNet and goal advantage
-    clean_df['emptyGoalNet'] = calculate_empty_goal_net(clean_df)
+    clean_df['emptyGoalNet'] = calculate_empty_goal_net(clean_df).astype(int)
     clean_df['isGoalAdvantage'] = determine_goal_advantage(clean_df)
+
+    clean_df['isGoal'] = clean_df['typeDescKey'].apply(lambda x: 1 if x == 'goal' else 0)
 
     # Add shot distance
     clean_df = additional_features(clean_df)

@@ -107,7 +107,7 @@ def additional_features(clean_df: pd.DataFrame) -> pd.DataFrame:
     # Add time before the last shot to observe the offensive pressure
 
     # Sort the dataframe by the period to calculate the time since the last shot
-    clean_df['offensivePressureTime'] = clean_df.groupby('eventOwnerTeam')['Game Seconds'].diff()
+    clean_df['offensivePressureTime'] = clean_df.groupby('eventOwnerTeam')['gameSeconds'].diff()
 
     # Convert the time to minutes and seconds
     clean_df['offensivePressureTime'] = clean_df.apply(lambda x: 0

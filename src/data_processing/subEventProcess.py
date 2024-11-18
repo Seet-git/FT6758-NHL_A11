@@ -66,7 +66,7 @@ def process_previous_event(df: pd.DataFrame):
     df['previousEventType'] = df_copy['typeDescKey']
 
     # Get previous time
-    df['timeSinceLastEvent'] = df['Game Seconds'].diff()
+    df['timeSinceLastEvent'] = df['gameSeconds'].diff()
     df['timeSinceLastEvent'] = df.apply(lambda x: 0
     if pd.isnull(x['timeSinceLastEvent']) else abs(x['timeSinceLastEvent']), axis=1) #Abs to prevent some error or negative time
 
