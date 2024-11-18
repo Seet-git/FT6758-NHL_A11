@@ -161,18 +161,17 @@ def evaluation(hp, save_file=False, n_splits=5):
         # Predict on validation set
         f1_val, y_true, y_score = infer(model, val_loader, hp.infer_threshold)
         f1_scores.append(f1_val)
-        if save_file:
-            y_pred = (np.array(y_score) > hp.infer_threshold).astype(int)
-            all_y_true.append(y_true)
-            all_y_scores.append(y_score)
-            all_y_pred.append(y_pred)
+        y_pred = (np.array(y_score) > hp.infer_threshold).astype(int)
+        all_y_true.append(y_true)
+        all_y_scores.append(y_score)
+        all_y_pred.append(y_pred)
 
     if config.WANDB_ACTIVATE:
         wandb.finish()
 
     if save_file:
         # Enregistre les visualisations courantes
-        plot_all_visualizations(all_y_true, all_y_scores, all_y_pred)
+        plot_all_visualizations(all_y_true, all_y_scores, all_y_pred, config.PREDICTION_FILENAME)
         return model, X_test, np.mean(f1_scores)
 
-    return np.mean(f1_scores)
+    return np.mean(f1_scores), all_y_true, all_y_scores, all_y_pred

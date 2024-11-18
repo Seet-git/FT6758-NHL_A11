@@ -1,3 +1,5 @@
+import glob
+import os
 import urllib.parse
 
 import optuna
@@ -6,6 +8,7 @@ from datetime import datetime
 import pytz
 import config
 from src.models.Neural_network.training import evaluation
+from src.models.Neural_network.utils import plot_all_visualizations
 from src.models.scripts.export_data import export_dict_as_python, export_trial_to_csv
 from src.models.scripts.matrix_hyperparameters import plot_hyperparameter_correlation_matrix
 
@@ -13,6 +16,19 @@ montreal_timezone = pytz.timezone('America/Montreal')
 current_time = datetime.now(montreal_timezone).strftime("%m/%d-%H:%M:%S")
 
 global_best_score = -float('inf')
+
+
+def delete_files_with_prefix():
+    folder_path = f"./images/{config.ALGORITHM}/"
+    pattern = f"{config.ALGORITHM}_trial_*"
+    files_to_delete = glob.glob(os.path.join(folder_path, pattern))
+
+    for file_path in files_to_delete:
+        try:
+            os.remove(file_path)
+            print(f"Fichier supprimé : {file_path}")
+        except Exception as e:
+            print(f"Erreur lors de la suppression du fichier {file_path}: {e}")
 
 
 def objective(trial):
@@ -45,12 +61,14 @@ def objective(trial):
                    )
 
     # Evaluation
-    mean_f1 = evaluation(hyperparameters_dict)
+    mean_f1, all_y_true, all_y_scores, all_y_pred = evaluation(hyperparameters_dict)
 
     # Update best score
     if mean_f1 > global_best_score:
-        global_best_score = mean_f1
-        export_dict_as_python(hyperparameters_dict)
+        global_best_score = mean_f1 # Update best score
+        export_dict_as_python(hyperparameters_dict) # Save Hyperparameters
+        delete_files_with_prefix() # Delete previous best score
+        plot_all_visualizations(all_y_true, all_y_scores, all_y_pred, f"{config.ALGORITHM}_trial_{trial.number}") # Save the new best prediction
         print(f"New best F1-score: {mean_f1}")
 
     # Return mean score
