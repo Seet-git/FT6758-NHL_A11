@@ -63,3 +63,5 @@ TEST_DATA = None
 VOCAB = None
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 LOG_PATH = "./src/models/Neural_network/logs"
+
+WANDB_PROJECT_NAME = "IFT6758.2024-A11"

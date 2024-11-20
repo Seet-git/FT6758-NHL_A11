@@ -55,8 +55,10 @@ def objective(trial):
 
     # Initialisation wandb
     if config.WANDB_ACTIVATE:
-        wandb.init(project=f"{config.ALGORITHM} Optimizer",
-                   name=f"{current_time} - Trial_{trial.number}",
+        wandb.init(project=f"{config.WANDB_PROJECT_NAME}",
+                   name=f"{config.ALGORITHM} optimizer: {current_time} - Trial_{trial.number}",
+                   group=f"{config.ALGORITHM}",
+                   tags=[f"{config.ALGORITHM}", f"{current_time} - Trial_{trial.number}"],
                    config=hyperparameters_dict
                    )
 
