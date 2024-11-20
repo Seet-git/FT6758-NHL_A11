@@ -59,8 +59,8 @@ def objective(trial):
                    name=f"{config.ALGORITHM} optimizer: {current_time} - Trial_{trial.number}",
                    group=f"{config.ALGORITHM}",
                    tags=[f"{config.ALGORITHM}", f"{current_time} - Trial_{trial.number}"],
-                   config=hyperparameters_dict
-                   )
+                   config=hyperparameters_dict,
+                   entity=config.WANDB_TEAM_NAME)
 
     # Evaluation
     mean_f1, all_y_true, all_y_scores, all_y_pred = evaluation(hyperparameters_dict)
