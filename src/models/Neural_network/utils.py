@@ -141,6 +141,8 @@ def goal_rate_vs_probability_percentile(y_true_list, y_scores_list, name=""):
     plt.xlabel('Centiles')
     plt.ylabel('Taux de buts')
     plt.title('Taux de buts par centile de probabilité')
+    plt.savefig(f"./images/{config.ALGORITHM}/{name}_goal_rate_vs_probability_percentile.svg",
+                format="svg")
     plt.show()
 
 
@@ -157,6 +159,8 @@ def cumulative_goal_rate(y_true_list, y_scores_list, name=""):
     plt.ylabel('Proportion cumulée de buts')
     plt.title('Proportion cumulée de buts par centile')
     plt.show()
+    plt.savefig(f"./images/{config.ALGORITHM}/{name}_cumulative_goal_rate.svg",
+                format="svg")
 
 
 def reliability_curve(y_true_list, y_scores_list, name=""):
@@ -173,6 +177,8 @@ def reliability_curve(y_true_list, y_scores_list, name=""):
     plt.ylabel('Probabilité observée')
     plt.title('Courbe de fiabilité')
     plt.show()
+    plt.savefig(f"./images/{config.ALGORITHM}/{name}_reliability_curve.svg",
+                format="svg")
 
 
 def plot_all_visualizations(y_true_list, y_scores_list, y_pred_list, name=""):
