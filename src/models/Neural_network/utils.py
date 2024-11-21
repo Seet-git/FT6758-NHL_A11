@@ -162,6 +162,19 @@ def cumulative_goal_rate(y_true_list, y_scores_list, name=""):
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_cumulative_goal_rate.svg",
                 format="svg")
 
+def cumulative_goal_rate_generic(y_true, y_scores):
+    plt.figure(figsize=(10, 6))
+
+    sorted_indices = np.argsort(y_scores)[::-1]  # Trie les scores de probabilité par ordre décroissant
+    y_sorted = np.array(y_true)[sorted_indices]  # Trie y_true selon les scores triés
+    cumulative_goals = np.cumsum(y_sorted) / np.sum(y_sorted)  # Calcule la proportion cumulée
+    plt.plot(np.linspace(0, 1, len(cumulative_goals)), cumulative_goals, lw=2)
+
+    plt.legend(loc="lower right")
+    plt.xlabel('Proportion des prédictions')
+    plt.ylabel('Proportion cumulée de buts')
+    plt.title('Proportion cumulée de buts par centile')
+    plt.show()
 
 def reliability_curve(y_true_list, y_scores_list, name=""):
     plt.figure(figsize=(10, 6))
