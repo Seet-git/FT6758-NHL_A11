@@ -117,3 +117,53 @@ def plot_goals_by_distance(data):
 
     plt.show()
 
+
+def show_xgboost_hyperparameters_scores(grid_search):
+    results = grid_search.cv_results_
+    params = results['params']
+    mean_test_scores = results['mean_test_score']
+
+    # Trier les combinaisons d'hyperparamètres par score
+    sorted_indices = np.argsort(mean_test_scores)
+    sorted_params = [params[i] for i in sorted_indices]
+    sorted_scores = mean_test_scores[sorted_indices]
+
+    # Créer le graphique et le tableau
+    fig, ax = plt.subplots(figsize=(35, 12))
+    ax.plot(sorted_scores, label="Érreur de calibration attendue", marker="o")  # Courbe des scores
+    ax.set_xticks(range(len(sorted_params)))
+    ax.set_xticklabels(range(1, len(sorted_params) + 1), rotation=90)
+    ax.set_xlabel("Combinaisons d'hyperparamètres")
+    ax.set_ylabel("Érreur de calibration attendue moyenne")
+    ax.set_title("Scores des combinaisons d'hyperparamètres testées")
+    ax.grid()
+    ax.legend()
+
+    # Ajouter un tableau
+    table_data = [[i + 1, str(p), f"{s:.4f}"] for i, (p, s) in enumerate(zip(sorted_params, sorted_scores))]
+    col_labels = ["Indice", "Hyperparamètres", "Érreur de calibration attendue"]
+    table = plt.table(
+        cellText=table_data,
+        colLabels=col_labels,
+        cellLoc="center",
+        loc="right",
+        bbox=[1.15, 0.1, 0.6, 0.8]  # Position du tableau
+    )
+
+    # Ajuster automatiquement la largeur des colonnes
+    table.auto_set_column_width([0, 1, 2])
+
+    # Ajuster la mise en page
+    plt.tight_layout()
+    # plt.savefig('grid_search_hyperparameter.png', dpi=300)
+    plt.show()
+
+def compute_goal_rate_by_percentile(y_val, y_proba, percentiles):
+    prob_bins = np.percentile(y_proba, percentiles)
+    goal_rates = []
+
+    for i in range(len(prob_bins) - 1):
+        mask = (y_proba >= prob_bins[i]) & (y_proba < prob_bins[i + 1])
+        goal_rates.append(y_val[mask].mean() * 100 if mask.sum() > 0 else 0)
+
+    return goal_rates
