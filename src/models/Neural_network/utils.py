@@ -149,18 +149,31 @@ def goal_rate_vs_probability_percentile(y_true_list, y_scores_list, name=""):
 def cumulative_goal_rate(y_true_list, y_scores_list, name=""):
     plt.figure(figsize=(10, 6))
     for fold, (y_true, y_scores) in enumerate(zip(y_true_list, y_scores_list)):
-        sorted_indices = np.argsort(y_scores)[::-1]  # Trie les scores de probabilité par ordre décroissant
-        y_sorted = np.array(y_true)[sorted_indices]  # Trie y_true selon les scores triés
-        cumulative_goals = np.cumsum(y_sorted) / np.sum(y_sorted)  # Calcule la proportion cumulée
-        plt.plot(np.linspace(0, 1, len(cumulative_goals)), cumulative_goals, label=f'Fold {fold + 1}', lw=2)
+        # Trie les scores de probabilité par ordre décroissant
+        sorted_indices = np.argsort(y_scores)[::-1]
+        y_sorted = np.array(y_true)[sorted_indices]
+        y_scores_sorted = np.array(y_scores)[sorted_indices]
+
+        # Group centile
+        n = len(y_scores_sorted)
+        percentiles = np.linspace(0, 100, 101)
+        percentiles_indices = (percentiles * n / 100).astype(int)
+
+        cumulative_goals = []
+        for idx in percentiles_indices:
+            cumulative_goals.append(np.sum(y_sorted[:idx]) / np.sum(y_sorted))  # Proportion cumulée
+
+        plt.plot(percentiles / 100, cumulative_goals, label=f'Fold {fold + 1}', lw=2)
 
     plt.legend(loc="lower right")
-    plt.xlabel('Proportion des prédictions')
+    plt.xlabel('Centile des prédictions')
     plt.ylabel('Proportion cumulée de buts')
     plt.title('Proportion cumulée de buts par centile')
-    plt.show()
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_cumulative_goal_rate.svg",
                 format="svg")
+    plt.show()
+
+
 
 def cumulative_goal_rate_generic(y_true, y_scores):
     plt.figure(figsize=(10, 6))
@@ -176,6 +189,7 @@ def cumulative_goal_rate_generic(y_true, y_scores):
     plt.title('Proportion cumulée de buts par centile')
     plt.show()
 
+
 def reliability_curve(y_true_list, y_scores_list, name=""):
     plt.figure(figsize=(10, 6))
     markers = ['o', 'x', 's', 'D', '^']  # Marqueurs différents
@@ -189,9 +203,10 @@ def reliability_curve(y_true_list, y_scores_list, name=""):
     plt.xlabel('Probabilité prédite')
     plt.ylabel('Probabilité observée')
     plt.title('Courbe de fiabilité')
-    plt.show()
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_reliability_curve.svg",
                 format="svg")
+    plt.show()
+
 
 
 def plot_all_visualizations(y_true_list, y_scores_list, y_pred_list, name=""):
