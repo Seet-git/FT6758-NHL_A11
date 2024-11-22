@@ -169,6 +169,7 @@ def compute_goal_rate_by_percentile(y_val, y_proba, percentiles):
     return goal_rates
 
 
+# Calcule l'Expected Calibration Error (ECE).
 def compute_ece(y_true, y_proba, n_bins=10):
     """
     Calcule l'Expected Calibration Error (ECE).
