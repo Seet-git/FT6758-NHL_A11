@@ -167,3 +167,45 @@ def compute_goal_rate_by_percentile(y_val, y_proba, percentiles):
         goal_rates.append(y_val[mask].mean() * 100 if mask.sum() > 0 else 0)
 
     return goal_rates
+
+
+def compute_ece(y_true, y_proba, n_bins=10):
+    """
+    Calcule l'Expected Calibration Error (ECE).
+
+    Args:
+        y_true: array, étiquettes vraies (0 ou 1).
+        y_proba: array, probabilités prédites pour la classe positive.
+        n_bins: int, nombre de bins pour la calibration.
+
+    Returns:
+        ece: erreur de calibration moyenne attendue.
+    """
+    bins = np.linspace(0, 1, n_bins + 1)
+    bin_indices = np.digitize(y_proba, bins, right=True) - 1
+    ece = 0.0
+
+    for i in range(n_bins):
+        # Masque des exemples dans le bin courant
+        bin_mask = bin_indices == i
+        if bin_mask.sum() > 0:
+            bin_mean_predicted = y_proba[bin_mask].mean()
+            bin_actual = y_true[bin_mask].mean()
+            ece += (bin_mask.sum() / len(y_true)) * abs(bin_mean_predicted - bin_actual)
+
+    return ece
+
+def negative_ece(y_true, y_proba):
+    return -compute_ece(y_true, y_proba)
+
+def plot_line_2_variables(x, y, color, label, xinf, xsup, x_label="Centile de probabilité", y_label="Taux de buts (%)"):
+    plt.figure(figsize=(8, 6))
+    plt.plot(x, y, marker='', color=color)
+    plt.title(label=label, fontsize=14)
+    plt.xlabel(x_label, fontsize=12)
+    plt.xlim(xinf,xsup)
+    plt.ylabel(y_label, fontsize=12)
+    plt.ylim(0,100)
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.show()
