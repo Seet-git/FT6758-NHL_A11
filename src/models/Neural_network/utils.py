@@ -69,7 +69,7 @@ def plot_roc_curve(y_true_list, y_scores_list, name=""):
     plt.title('ROC Curve - Tous les folds')
     plt.legend(loc="lower right")
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_roc_curve.svg", format="svg")
-    plt.show()
+    
 
 
 def plot_precision_recall_curve(y_true_list, y_scores_list, name=""):
@@ -84,7 +84,7 @@ def plot_precision_recall_curve(y_true_list, y_scores_list, name=""):
     plt.legend(loc="lower left")
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_precision_recall_curve.svg",
                 format="svg")
-    plt.show()
+    
 
 
 def plot_confusion_matrix(y_true_list, y_pred_list, name=""):
@@ -95,7 +95,7 @@ def plot_confusion_matrix(y_true_list, y_pred_list, name=""):
     plt.ylabel('Actual')
     plt.title('Confusion Matrix (Dernier Fold)')
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_confusion_matrix.svg", format="svg")
-    plt.show()
+    
 
 
 def performance_metrics_bar(y_true_list, y_pred_list, name=""):
@@ -115,7 +115,7 @@ def performance_metrics_bar(y_true_list, y_pred_list, name=""):
     plt.ylim(0, 1)
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_performance_metrics.svg",
                 format="svg")
-    plt.show()
+    
 
 
 def goal_rate_vs_probability_percentile(y_true_list, y_scores_list, name=""):
@@ -143,7 +143,7 @@ def goal_rate_vs_probability_percentile(y_true_list, y_scores_list, name=""):
     plt.title('Taux de buts par centile de probabilité')
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_goal_rate_vs_probability_percentile.svg",
                 format="svg")
-    plt.show()
+    
 
 
 def cumulative_goal_rate(y_true_list, y_scores_list, name=""):
@@ -171,7 +171,7 @@ def cumulative_goal_rate(y_true_list, y_scores_list, name=""):
     plt.title('Proportion cumulée de buts par centile')
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_cumulative_goal_rate.svg",
                 format="svg")
-    plt.show()
+    
 
 
 
@@ -187,7 +187,7 @@ def cumulative_goal_rate_generic(y_true, y_scores):
     plt.xlabel('Proportion des prédictions')
     plt.ylabel('Proportion cumulée de buts')
     plt.title('Proportion cumulée de buts par centile')
-    plt.show()
+    
 
 
 def reliability_curve(y_true_list, y_scores_list, name=""):
@@ -205,7 +205,7 @@ def reliability_curve(y_true_list, y_scores_list, name=""):
     plt.title('Courbe de fiabilité')
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_reliability_curve.svg",
                 format="svg")
-    plt.show()
+    
 
 
 

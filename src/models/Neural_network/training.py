@@ -40,7 +40,7 @@ def infer(model, data, threshold=0.5):
             y_true.extend(labels.cpu().numpy())
 
     # Compute f1 score, precision, recall, accuracy
-    f1 = f1_score(y_true, y_pred, average="macro")
+    f1 = f1_score(y_true, y_pred, average="weighted")
     return f1, y_true, y_score
 
 
