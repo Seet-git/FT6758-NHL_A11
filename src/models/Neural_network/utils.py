@@ -146,14 +146,14 @@ def goal_rate_vs_probability_percentile(y_true_list, y_scores_list, name=""):
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_goal_rate_vs_probability_percentile.svg",
                 format="svg")
 
-def cumulative_goal_rate(y_proba_list, y_val_list, name=""):
+def cumulative_goal_rate(y_true_list, y_score_list, name=""):
     plt.figure(figsize=(10, 6))
-    for fold, (y_proba, y_val) in enumerate(zip(y_proba_list, y_val_list)):
+    for fold, (y_score, y_true) in enumerate(zip(y_score_list, y_true_list)):
         # Créer un DataFrame pour les probabilités de tir
-        df_probs = pd.DataFrame(y_proba, columns=['Probability'])
+        df_probs = pd.DataFrame(y_score, columns=['Probability'])
 
         # Combiner la probabilité de but avec la colonne "isGoal"
-        df_probs = pd.concat([df_probs.reset_index(drop=True), pd.Series(y_val, name='isGoal').reset_index(drop=True)],
+        df_probs = pd.concat([df_probs.reset_index(drop=True), pd.Series(y_true, name='isGoal').reset_index(drop=True)],
                              axis=1)
 
         # Calculer et ajouter une colonne pour les percentiles
@@ -173,7 +173,7 @@ def cumulative_goal_rate(y_proba_list, y_val_list, name=""):
     plt.xlabel('Centile des prédictions')
     plt.ylabel('Proportion cumulée de buts')
     plt.title('Proportion cumulée de buts par centile')
-    plt.savefig(f"./images/{config.ALGORITHM}/{name}_cumulative_goal_rate_2.svg", format="svg")
+    plt.savefig(f"./images/{config.ALGORITHM}/{name}_cumulative_goal_rate.svg", format="svg")
 
 
 
