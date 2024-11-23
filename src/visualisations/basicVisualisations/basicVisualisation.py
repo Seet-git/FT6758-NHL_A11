@@ -210,3 +210,19 @@ def plot_line_2_variables(x, y, color, label, xinf, xsup, x_label="Centile de pr
     plt.grid(alpha=0.3)
     plt.tight_layout()
     plt.show()
+
+def compute_cumulative_goal_rate(y_proba, y_val, event):
+    # Créer un DataFrame pour les probabilités de tir
+    df_probs = pd.DataFrame(y_proba)
+
+    # Combiner la probabilité de but avec la colonne "isGoal"
+    df_probs = pd.concat([df_probs[event].reset_index(drop=True), y_val.reset_index(drop=True)], axis=1)
+
+    # Calculer et ajouter une colonne pour les percentiles
+    percentile_values = df_probs[event].rank(pct=True)
+    df_probs['Percentile'] = percentile_values * 100
+    taux_cumul = df_probs.copy()
+
+    taux_cumul_but = taux_cumul[taux_cumul['isGoal'] == 1]
+
+    return taux_cumul_but
