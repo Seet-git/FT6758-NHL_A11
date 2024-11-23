@@ -111,9 +111,8 @@ def save_best_model(model, all_y_true, all_y_scores, all_y_pred, mean_f1, trial_
     plot_all_visualizations(all_y_true, all_y_scores, all_y_pred, f"{config.ALGORITHM}_trial_{trial_number}")
 
     # Sauvegarde du modèle
-    model_dir = f"./artifacts/{config.ALGORITHM}/"
-    os.makedirs(model_dir, exist_ok=True)
-    model_path = os.path.join(model_dir, "best_model.pkl")
+    model_dir = f"./artifacts/"
+    model_path = os.path.join(model_dir, f"{config.ALGORITHM}_best_model.pkl")
     with open(model_path, "wb") as f:
         pickle.dump(model, f)
 
