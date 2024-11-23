@@ -2,6 +2,8 @@ import os
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+
 import config
 import random
 from sklearn.metrics import roc_curve, auc, precision_recall_curve, confusion_matrix, f1_score, precision_score, \
@@ -143,35 +145,35 @@ def goal_rate_vs_probability_percentile(y_true_list, y_scores_list, name=""):
     plt.title('Taux de buts par centile de probabilité')
     plt.savefig(f"./images/{config.ALGORITHM}/{name}_goal_rate_vs_probability_percentile.svg",
                 format="svg")
-    
 
-
-def cumulative_goal_rate(y_true_list, y_scores_list, name=""):
+def cumulative_goal_rate(y_proba_list, y_val_list, name=""):
     plt.figure(figsize=(10, 6))
-    for fold, (y_true, y_scores) in enumerate(zip(y_true_list, y_scores_list)):
-        # Trie les scores de probabilité par ordre décroissant
-        sorted_indices = np.argsort(y_scores)[::-1]
-        y_sorted = np.array(y_true)[sorted_indices]
-        y_scores_sorted = np.array(y_scores)[sorted_indices]
+    for fold, (y_proba, y_val) in enumerate(zip(y_proba_list, y_val_list)):
+        # Créer un DataFrame pour les probabilités de tir
+        df_probs = pd.DataFrame(y_proba, columns=['Probability'])
 
-        # Group centile
-        n = len(y_scores_sorted)
-        percentiles = np.linspace(0, 100, 101)
-        percentiles_indices = (percentiles * n / 100).astype(int)
+        # Combiner la probabilité de but avec la colonne "isGoal"
+        df_probs = pd.concat([df_probs.reset_index(drop=True), pd.Series(y_val, name='isGoal').reset_index(drop=True)],
+                             axis=1)
 
-        cumulative_goals = []
-        for idx in percentiles_indices:
-            cumulative_goals.append(np.sum(y_sorted[:idx]) / np.sum(y_sorted))  # Proportion cumulée
+        # Calculer et ajouter une colonne pour les percentiles
+        df_probs['Percentile'] = df_probs['Probability'].rank(pct=True) * 100
 
-        plt.plot(percentiles / 100, cumulative_goals, label=f'Fold {fold + 1}', lw=2)
+        # Calculer la proportion cumulée de buts
+        df_probs_sorted = df_probs.sort_values(by='Probability', ascending=False)
+        cumulative_goals = np.cumsum(df_probs_sorted['isGoal']) / np.sum(df_probs_sorted['isGoal'])
+
+        # Extraire les percentiles pour l'affichage
+        percentiles = df_probs_sorted['Percentile'].values / 100
+
+        # Tracer la courbe pour chaque fold
+        plt.plot(percentiles, cumulative_goals, label=f'Fold {fold + 1}', lw=2)
 
     plt.legend(loc="lower right")
     plt.xlabel('Centile des prédictions')
     plt.ylabel('Proportion cumulée de buts')
     plt.title('Proportion cumulée de buts par centile')
-    plt.savefig(f"./images/{config.ALGORITHM}/{name}_cumulative_goal_rate.svg",
-                format="svg")
-    
+    plt.savefig(f"./images/{config.ALGORITHM}/{name}_cumulative_goal_rate_2.svg", format="svg")
 
 
 

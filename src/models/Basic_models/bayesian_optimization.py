@@ -36,12 +36,14 @@ def get_hyperparameters(trial):
     elif config.ALGORITHM == "KNN":
         hyperparameters_dict["n_neighbors"] = trial.suggest_int("n_neighbors", 1, 5)
         hyperparameters_dict["algorithm"] = trial.suggest_categorical("algorithm",
-                                                                      ["auto", "ball_tree", "kd_tree", "brute"])
+                                                                   ["auto", "ball_tree", "kd_tree", "brute"])
+    elif config.ALGORITHM == "Perceptron":
+        pass
     elif config.ALGORITHM == "RandomForest":
         hyperparameters_dict["n_estimators"] = trial.suggest_int("n_estimators", 1, 5)
         hyperparameters_dict["max_depth"] = trial.suggest_int("max_depth", 1, 5)
     else:
-        raise ValueError("Bad ALGORITHM Value")
+        raise ValueError(f"Bad ALGORITHM Value: {config.ALGORITHM}")
     return hyperparameters_dict
 
 
