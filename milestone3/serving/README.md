@@ -14,6 +14,8 @@ waitress-serve --listen=localhost:5000 app:app
 # Tester un call HTTP
 
 dans un jupyter notebook ou un fichier python, executer:
+```python
+import requests
 
 WANDB_PROJECT_NAME = "IFT6758.2024-A11"
 WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
@@ -25,6 +27,5 @@ data = {
 }
 
 r = requests.post("http://127.0.0.1:5000/download_registry_model", json=data)   
-
-
+```
 
