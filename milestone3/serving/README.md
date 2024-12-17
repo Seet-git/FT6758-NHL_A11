@@ -1,11 +1,15 @@
 # Installer les package
 
-créer un environement a partir d'un des 2 fichiers requirements (j'ai mis deux versions, une pour conda et une autre pour python)
+dans le fichier environment.yml, mentionner le nom d'environement souhaité, ensuite rouler:
 
-# deifnitino des variables d'environement
+```python
+conda env create -f environment.yml
+```
+
+# définition des variables d'environement
 
 créer un fichier .env dans le repertoire serving et y ajouter 
-la variable WANDB_API_KEY=your_wand_db_api
+la variable ```WANDB_API_KEY=your_wand_db_api```
 
 # Lancer le serveur
 
