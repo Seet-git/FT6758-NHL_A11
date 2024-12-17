@@ -1,6 +1,6 @@
-# Installer les package
+# Installer les packages
 
-dans le fichier environment.yml, mentionner le nom d'environement souhaité, ensuite rouler:
+Dans le fichier environment.yml ici a la racine du projet, mentionner le nom d'environement souhaité, ensuite rouler la commande:
 
 ```python
 conda env create -f environment.yml
@@ -8,10 +8,12 @@ conda env create -f environment.yml
 
 # définition des variables d'environement
 
-créer un fichier .env dans le repertoire serving et y ajouter 
+Dans le repertoire milestone3/serving, créer un fichier .env et y ajouter 
 la variable ```WANDB_API_KEY=your_wand_db_api```
 
 # Lancer le serveur
+
+Depuis le repertoire milestone3/serving, rouler cette commande:
 
 waitress-serve --listen=localhost:5000 app:app
 
@@ -34,6 +36,8 @@ r = requests.post("http://127.0.0.1:5000/download_registry_model", json=data)
 ```
 
 ```python
+import requests
+
 data = {
     "distance": [8, 40],
     "angle": [20, 80],
