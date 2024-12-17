@@ -33,3 +33,11 @@ data = {
 r = requests.post("http://127.0.0.1:5000/download_registry_model", json=data)   
 ```
 
+```python
+data = {
+    "distance": [8, 40],
+    "angle": [20, 80],
+}
+
+r = requests.post("http://127.0.0.1:5000/predict", json=data)
+```

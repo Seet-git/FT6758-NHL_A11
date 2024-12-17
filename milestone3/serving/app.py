@@ -18,6 +18,8 @@ import joblib
 import wandb
 from dotenv import load_dotenv
 import pickle
+import numpy as np
+
 # import ift6758
 
 load_dotenv()
@@ -75,6 +77,13 @@ def logs():
 def download_registry_model():
     global model
     """
+    inputs:
+    - project_name: should be IFT6758.2024-A11
+    - entity_name: should be youry-macius-universite-de-montreal
+    - model_name: LogisticRegression_Distance ou LogisticRegression_Distance_Angle
+    """
+
+    """
     Handles POST requests made to http://IP_ADDRESS:PORT/download_registry_model
 
     The comet API key should be retrieved from the ${COMET_API_KEY} environment variable.
@@ -83,7 +92,7 @@ def download_registry_model():
 
         {
             workspace: (required),
-            model: (required), # LogisticRegression_Distance, LogisticRegression_Distance_Angle
+            model: (required),
             version: (required),
             ... (other fields if needed) ...
         }
@@ -159,10 +168,13 @@ def download_registry_model():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-
-    print("predict route")
+    global model
 
     """
+    inputs: 
+        - distance
+        - angle (si on utlise le modele distance et angle)
+    
     Handles POST requests made to http://IP_ADDRESS:PORT/predict
 
     Returns predictions
@@ -171,10 +183,32 @@ def predict():
     json = request.get_json()
     app.logger.info(json)
 
-    # TODO:
-    raise NotImplementedError("TODO: implement this enpdoint")
-    
-    response = None
+    try:
+        distances = json["distance"]
+        x_input = np.array(distances).reshape(-1, 1)  # Si angle n'est pas fourni, on utilise uniquement distance
 
-    app.logger.info(response)
-    return jsonify(response)  # response must be json serializable!
+        if "angle" in json:
+            angles = json["angle"]
+            x_input = np.column_stack((distances, angles))
+
+        goal_probs = model.predict_proba(x_input)[:, 1]
+        is_goal = model.predict(x_input)
+
+        response = {
+            "goal_probs": goal_probs.tolist(),
+            "is_goal": is_goal.tolist()
+        }
+
+        app.logger.info(response)
+        return jsonify(response), 200 # response must be json serializable!
+
+    except Exception as e:
+        app.logger.error(f"Failed to do the prediction with the received input.")
+
+        response = {
+            "status": "error",
+            "message": f"Failed to do the prediction with the received input."
+        }
+        return jsonify(response), 500
+
+
