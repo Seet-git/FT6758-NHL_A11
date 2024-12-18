@@ -64,14 +64,20 @@ def before_first_request():
 def logs():
     """Reads data from the log file and returns them as the response"""
 
-    print("logs route")
-
     # TODO: read the log file specified and return the data
-    raise NotImplementedError("TODO: implement this endpoint")
+    try:
+        # Lire le fichier log
+        with open("flask.log", "r") as log_file:
+            logs_content = log_file.readlines()
 
-    response = None
-    return jsonify(response)  # response must be json serializable!
+        # Préparer la réponse
+        response = {"logs": logs_content}
 
+        return jsonify(response)
+
+    except Exception as e:
+        # Gérer les erreurs de lecture du fichier
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/download_registry_model", methods=["POST"])
 def download_registry_model():

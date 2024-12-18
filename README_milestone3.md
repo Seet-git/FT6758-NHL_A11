@@ -32,7 +32,8 @@ data = {
     "model_name": "LogisticRegression_Distance_Angle", # valeurs possibles : LogisticRegression_Distance_Angle, LogisticRegression_Distance
 }
 
-r = requests.post("http://127.0.0.1:5000/download_registry_model", json=data)   
+r = requests.post("http://127.0.0.1:5000/download_registry_model", json=data) 
+print(r.json())
 ```
 
 ```python
@@ -44,4 +45,5 @@ data = {
 }
 
 r = requests.post("http://127.0.0.1:5000/predict", json=data)
+print(r.json())
 ```
