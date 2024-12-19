@@ -1,11 +1,12 @@
 # Installer les packages
 
-Dans le fichier `environment.yml` situé à la racine du projet, spécifiez le nom de l'environnement souhaité.
+Dans le fichier `environment.yml` (`environment_linux.yml` ou `environment_windows.yml`) situé à la racine du projet, spécifiez le nom de l'environnement souhaité.
 
 Exécutez la commande suivante pour créer l'environnement :
 
+Exemple pour windows
 ```bash
-  conda env create -f environment.yml
+  conda env create -f environment_windows.yml
 ```
 
 # Définition des variables d'environnement
