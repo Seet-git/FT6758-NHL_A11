@@ -3,7 +3,6 @@ import requests
 import pandas as pd
 import logging
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -28,12 +27,23 @@ class ServingClient:
             X (Dataframe): Input dataframe to submit to the prediction service.
         """
 
-        raise NotImplementedError("TODO: implement this function")
+        try:
+            response = requests.post(self.base_url + "/predict", json=X.to_dict(orient="list"))
+            json_response = response.json()
+            new_df = pd.DataFrame(json_response, index=X.index)
+            return new_df
+
+        except Exception as e:
+            logger.error("Error ", e)
 
     def logs(self) -> dict:
         """Get server logs"""
+        try:
+            response = requests.get(self.base_url + "/logs")
+            return response.json()
 
-        raise NotImplementedError("TODO: implement this function")
+        except Exception as e:
+            logger.error("Error ", e)
 
     def download_registry_model(self, workspace: str, model: str, version: str) -> dict:
         """
@@ -51,4 +61,15 @@ class ServingClient:
             version (str): The model version to download
         """
 
-        raise NotImplementedError("TODO: implement this function")
+        try:
+            data = {
+                "workspace": workspace,
+                "model_name": model, # valeurs possibles : LogisticRegression_Distance_Angle, LogisticRegression_Distance
+                "version" : version
+            }
+
+            response = requests.post(self.base_url + "/download_registry_model", json=data)
+            return response.json()
+
+        except Exception as e:
+            logger.error("Error ", e)

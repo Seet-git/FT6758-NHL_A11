@@ -108,9 +108,9 @@ def download_registry_model():
     json = request.get_json()
     app.logger.info(json)
 
-    project_name = json["project_name"]
-    entity_name = json["entity_name"]
+    workspace = json["workspace"]
     model_name = json["model_name"]
+    version = json["version"]
     output_path = "./models"
 
     # TODO: check to see if the model you are querying for is already downloaded
@@ -148,7 +148,7 @@ def download_registry_model():
         # run = wandb.init(project=project_name, entity=entity_name)
 
         api = wandb.Api()
-        artifact = api.artifact(f"{entity_name}/{project_name}/{model_name}:latest")
+        artifact = api.artifact(f"{workspace}/{model_name}:{version}")
 
         artifact_dir = artifact.download(root=output_path)
 
