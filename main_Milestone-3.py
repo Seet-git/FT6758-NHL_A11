@@ -11,7 +11,7 @@ def main():
     client = ServingClient(ip="127.0.0.1", port=5000)
 
     # Download model
-    print("\n Testing download model")
+    print("\nTesting download model")
     workspace = WANDB_PROJECT_NAME + "/" + WANDB_TEAM_NAME
     model = "LogisticRegression_Distance_Angle"
     version = "latest"
@@ -26,8 +26,8 @@ def main():
     # Predictions
     print("\nTesting Predict")
     df = pd.DataFrame({
-        "distance": [10, 20, 30],
-        "angle": [45, 60, 90]
+        "distance": [8, 40],
+        "angle": [20, 80],
     })
 
     try:
