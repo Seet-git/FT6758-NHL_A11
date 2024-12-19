@@ -29,6 +29,7 @@ class ServingClient:
 
         try:
             response = requests.post(self.base_url + "/predict", json=X.to_dict(orient="list"))
+            response.raise_for_status()
             json_response = response.json()
             new_df = pd.DataFrame(json_response, index=X.index)
             return new_df
@@ -40,6 +41,7 @@ class ServingClient:
         """Get server logs"""
         try:
             response = requests.get(self.base_url + "/logs")
+            response.raise_for_status()
             return response.json()
 
         except Exception as e:
@@ -69,6 +71,7 @@ class ServingClient:
             }
 
             response = requests.post(self.base_url + "/download_registry_model", json=data)
+            response.raise_for_status()
             return response.json()
 
         except Exception as e:

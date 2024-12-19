@@ -10,6 +10,19 @@ def main():
     # Init
     client = ServingClient(ip="127.0.0.1", port=5000)
 
+    # Download model
+    print("\n Testing download model")
+    workspace = WANDB_PROJECT_NAME + "/" + WANDB_TEAM_NAME
+    model = "LogisticRegression_Distance_Angle"
+    version = "latest"
+
+    try:
+        result = client.download_registry_model(workspace=workspace, model=model, version=version)
+        print("Model Download Result:")
+        print(result)
+    except Exception as e:
+        print(f"Error downloading model: {e}")
+
     # Predictions
     print("\nTesting Predict")
     df = pd.DataFrame({
@@ -31,20 +44,6 @@ def main():
         print("Logs:", logs)
     except Exception as e:
         print(f"Error logs: {e}")
-
-    # Download model
-    print("\n Testing download model")
-    workspace = WANDB_PROJECT_NAME + "/" + WANDB_TEAM_NAME
-    model = "LogisticRegression_Distance_Angle"
-    version = "latest"
-
-    try:
-        result = client.download_registry_model(workspace=workspace, model=model, version=version)
-        print("Model Download Result:")
-        print(result)
-    except Exception as e:
-        print(f"Error downloading model: {e}")
-
 
 if __name__ == "__main__":
     main()
