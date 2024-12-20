@@ -1,8 +1,16 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from milestone3.ift6758.ift6758.client import *
+import sys
+import os
 
+# from milestone3.ift6758.ift6758.client import *
+
+# Ajouter le chemin du dossier `client` au `sys.path`
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ift6758', 'ift6758', 'client')))
+
+# Importer le fichier `serving_client`
+import serving_client
 
 """
 General template for your streamlit app. 
@@ -56,11 +64,9 @@ with st.sidebar:
 
         if result.status_code == 200: # success
             actual_model = selected_model
+            st.write(f"Le modèle {actual_model} a bien été récupéré")
         else:
-            st.error("There was an error getting the model.")
-
-
-
+            st.error("Une érreur est survenue lors de la récupération du modèle.")
 
 
 with st.container():
