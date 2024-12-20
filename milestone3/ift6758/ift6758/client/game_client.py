@@ -60,8 +60,8 @@ class GameClient:
                 game = game.drop(index=np.arange(0, len(saved_predictions)))
                 
             else:
-                print(f"Local predictions for game {game_id}")
-                return saved_predictions
+                print(f"Updates not found for game {game_id}")
+                return ""
 
         predictions = self.predict(game)
         predictions_df = pd.DataFrame(predictions)
