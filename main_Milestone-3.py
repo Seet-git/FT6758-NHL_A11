@@ -6,7 +6,7 @@ WANDB_PROJECT_NAME = "IFT6758.2024-A11"
 WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
 
 
-def main():
+def serving_test():
     # Init
     client = ServingClient(ip="127.0.0.1", port=5000)
 
@@ -45,5 +45,17 @@ def main():
     except Exception as e:
         print(f"Error logs: {e}")
 
+def game_client_test():
+    BASE_URL = "https://api-web.nhle.com/v1/gamecenter"
+    MODEL_SERVICE_URL = "http://127.0.0.1:5000"
+
+    client = GameClient(BASE_URL, MODEL_SERVICE_URL)
+    game_id = "2022030411"
+
+    results = client.process_game(game_id)
+    print(results)
+    print("Process finished")
+
 if __name__ == "__main__":
-    main()
+    # serving_test()
+    game_client_test()
