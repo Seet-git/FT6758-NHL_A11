@@ -64,10 +64,10 @@ with st.sidebar:
 
         if result.status_code == 200: # success
             actual_model = selected_model
-            st.write(f"Le modèle {actual_model} a bien été récupéré")
         else:
             st.error("Une érreur est survenue lors de la récupération du modèle.")
 
+    st.write(f"Modèle actif : {actual_model}")
 
 with st.container():
     # TODO: Add Game ID input

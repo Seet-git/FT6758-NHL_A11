@@ -1,9 +1,9 @@
 import numpy as np
 import requests
 import os
-from src import convert_game_to_dataframe
+# from src import convert_game_to_dataframe
 import pandas as pd
-
+from .game_client_utils import *
 
 class GameClient:
     def __init__(self, base_url, model_service_url):
@@ -56,7 +56,7 @@ class GameClient:
                 print(f"Tracker updated for game {game_id}")
                 self.old_predictions = saved_predictions
                 game = game.drop(index=np.arange(0, len(saved_predictions)))
-
+                
             else:
                 print(f"Updates not found for game {game_id}")
                 return saved_predictions
