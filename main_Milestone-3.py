@@ -1,3 +1,6 @@
+import json
+import os
+
 import pandas as pd
 
 from milestone3.ift6758.ift6758.client import *
@@ -7,6 +10,8 @@ WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
 
 
 def serving_test():
+    print("\n=== Client fournisseur ===")
+
     # Init
     client = ServingClient(ip="127.0.0.1", port=5000)
 
@@ -16,12 +21,8 @@ def serving_test():
     model = "LogisticRegression_Distance_Angle"
     version = "latest"
 
-    try:
-        result = client.download_registry_model(workspace=workspace, model=model, version=version)
-        print("Model Download Result:")
-        print(result)
-    except Exception as e:
-        print(f"Error downloading model: {e}")
+    result = client.download_registry_model(workspace=workspace, model=model, version=version)
+    print("Model Download Result: ", result)
 
     # Predictions
     print("\nTesting Predict")
@@ -29,33 +30,59 @@ def serving_test():
         "distance": [8, 40],
         "angle": [20, 80],
     })
-
-    try:
-        predictions = client.predict(df)
-        print("Predictions:")
-        print(predictions)
-    except Exception as e:
-        print(f"Error prediction: {e}")
+    predictions = client.predict(df)
+    print("Predictions:", predictions)
 
     # Logs
     print("\nTesting Logs")
-    try:
-        logs = client.logs()
-        print("Logs:", logs)
-    except Exception as e:
-        print(f"Error logs: {e}")
+    logs = client.logs()
+    print("Logs:", logs)
+
 
 def game_client_test():
+    print("\n=== Client de jeu ===")
     BASE_URL = "https://api-web.nhle.com/v1/gamecenter"
     MODEL_SERVICE_URL = "http://127.0.0.1:5000"
 
     client = GameClient(BASE_URL, MODEL_SERVICE_URL)
     game_id = "2022030411"
 
+    # No predictions
+
+    # Supprime le fichier
+    path = f"./data/predictions/{game_id}_predictions.json"
+    if os.path.exists(path):
+        os.remove(path)
+
+    print("\nTesting no predictions")
     results = client.process_game(game_id)
     print(results)
     print("Process finished")
 
+    # All predictions
+    print("\nTesting all predictions already here")
+    results = client.process_game(game_id)
+    print(results)
+    print("Process finished")
+
+    # Update tracker
+
+    # Supprimer les deux dernières prédictions
+    with open(path, "r") as file:
+        data = json.load(file)
+
+    if len(data) >= 2:
+        data = data[:-2]
+
+    with open(path, "w") as file:
+        json.dump(data, file, indent=1)
+
+    print("\nTesting update tracker :")
+    results = client.process_game(game_id)
+    print(results)
+    print("Process finished")
+
+
 if __name__ == "__main__":
-    # serving_test()
+    serving_test()
     game_client_test()

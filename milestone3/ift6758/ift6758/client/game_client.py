@@ -1,11 +1,8 @@
 import numpy as np
 import requests
-import json
 import os
 from src import convert_game_to_dataframe
 import pandas as pd
-import pprint
-
 
 class GameClient:
     def __init__(self, base_url, model_service_url):
@@ -55,13 +52,13 @@ class GameClient:
 
         if saved_predictions is not None:
             if len(game) > len(saved_predictions):
-                print(f"Update predictions for game {game_id}")
+                print(f"Tracker updated for game {game_id}")
                 self.old_predictions = saved_predictions
                 game = game.drop(index=np.arange(0, len(saved_predictions)))
                 
             else:
                 print(f"Updates not found for game {game_id}")
-                return ""
+                return saved_predictions
 
         predictions = self.predict(game)
         predictions_df = pd.DataFrame(predictions)
