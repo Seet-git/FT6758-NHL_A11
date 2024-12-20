@@ -4,6 +4,7 @@ import os
 from src import convert_game_to_dataframe
 import pandas as pd
 
+
 class GameClient:
     def __init__(self, base_url, model_service_url):
         self.old_predictions = None
@@ -55,7 +56,7 @@ class GameClient:
                 print(f"Tracker updated for game {game_id}")
                 self.old_predictions = saved_predictions
                 game = game.drop(index=np.arange(0, len(saved_predictions)))
-                
+
             else:
                 print(f"Updates not found for game {game_id}")
                 return saved_predictions
@@ -64,4 +65,8 @@ class GameClient:
         predictions_df = pd.DataFrame(predictions)
 
         self._save_predictions(game_id, predictions_df)
+
+        if self.old_predictions is not None:
+            return pd.concat([self.old_predictions, predictions_df], axis=0, ignore_index=True)
+
         return predictions_df
