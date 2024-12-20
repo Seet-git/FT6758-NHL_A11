@@ -22,8 +22,9 @@ def extract_teams(game_nhl: dict) -> pd.DataFrame:
      :param game_nhl: Dictionary containing the data of the NHL game
      :return: A Pandas DataFrame containing team data
     """
-    home_team = {'teamId': game_nhl['homeTeam']['id'], 'teamName': game_nhl['homeTeam']['name']['default'],
+    home_team = {'teamId': game_nhl['homeTeam']['id'], 'teamName': game_nhl['homeTeam']['commonName']['default'],
+
                  'teamSide': 'home'}
-    away_team = {'teamId': game_nhl['awayTeam']['id'], 'teamName': game_nhl['awayTeam']['name']['default'],
+    away_team = {'teamId': game_nhl['awayTeam']['id'], 'teamName': game_nhl['awayTeam']['commonName']['default'],
                  'teamSide': 'away'}
     return pd.DataFrame([home_team, away_team])

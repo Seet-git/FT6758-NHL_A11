@@ -11,7 +11,7 @@ Exemple pour windows
 
 # Définition des variables d'environnement
 
-Dans le repertoire `milestone3/serving`, ajoutez votre clé WandB: 
+Dans le fichier `milestone3/serving/.env`, ajoutez votre clé WandB: 
 
 ```python
 WANDB_API_KEY=your_wand_db_api

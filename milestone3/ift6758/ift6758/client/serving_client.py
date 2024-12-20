@@ -28,6 +28,7 @@ class ServingClient:
         """
 
         try:
+            print(X.to_dict(orient="list"))
             response = requests.post(self.base_url + "/predict", json=X.to_dict(orient="list"))
             response.raise_for_status()
             json_response = response.json()
