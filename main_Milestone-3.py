@@ -12,7 +12,7 @@ def main():
 
     # Download model
     print("\nTesting download model")
-    workspace = WANDB_PROJECT_NAME + "/" + WANDB_TEAM_NAME
+    workspace = WANDB_TEAM_NAME + "/" + WANDB_PROJECT_NAME
     model = "LogisticRegression_Distance_Angle"
     version = "latest"
 
