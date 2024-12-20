@@ -9,6 +9,12 @@ Exemple pour windows
   conda env create -f environment_windows.yml
 ```
 
+Pour créer un nouveau fichier yml apres l'ajout d'un nouveau package, faire ceci:
+
+```bash
+conda env export --no-builds > environment.yml
+```
+
 # Définition des variables d'environnement
 
 Dans le fichier `milestone3/serving/.env`, ajoutez votre clé WandB: 
@@ -28,3 +34,33 @@ Exécutez la commande suivante :
 # Lancer le client
 
 Exécutez le fichier : `python main_Milestone-3.py` 
+
+# Lancer predicteur flask comme conteneur Docker
+
+- Installer l'app Docker desktop si necessaire
+- Ouvrir l'app Docker desktop
+- aller dans le repertoire milestone3 du projet
+- dans le fichier .env du dossier milestone3, y mentionner votre clé API wandb
+- executer les commandes:
+```bash
+  docker-compose build
+```
+ensuite
+
+```bash
+  docker-compose up
+```
+
+- Tester les calls API comme expliqué précédement pour vérifier que
+le serveur a bien démarré
+
+
+# Section Streamlit 
+
+Pour lancer L'app StreamLit, aller dans le repertoire milestone3 et executer la commande:
+
+```bash
+ streamlit run .\streamlit_app.py
+```
+
+

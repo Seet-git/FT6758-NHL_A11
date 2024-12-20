@@ -64,16 +64,11 @@ class ServingClient:
             version (str): The model version to download
         """
 
-        try:
-            data = {
-                "workspace": workspace,
-                "model_name": model, # valeurs possibles : LogisticRegression_Distance_Angle, LogisticRegression_Distance
-                "version" : version
-            }
+        data = {
+            "workspace": workspace,
+            "model_name": model, # valeurs possibles : LogisticRegression_Distance_Angle, LogisticRegression_Distance
+            "version" : version
+        }
 
-            response = requests.post(self.base_url + "/download_registry_model", json=data)
-            response.raise_for_status()
-            return response.json()
+        return requests.post(self.base_url + "/download_registry_model", json=data)
 
-        except Exception as e:
-            logger.error("Error ", e)
