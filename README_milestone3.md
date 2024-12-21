@@ -60,7 +60,8 @@ le serveur a bien démarré
 Pour lancer L'app StreamLit, aller dans le repertoire milestone3 et executer la commande:
 
 ```bash
- streamlit run .\streamlit_app.py
+  cd milestone3/
+  streamlit run ./streamlit_app.py
 ```
 
 

@@ -11,14 +11,15 @@ WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
 
 def serving_test():
     print("\n=== Client fournisseur ===")
+    model = "LogisticRegression_Distance"
 
     # Init
-    client = ServingClient(ip="127.0.0.1", port=5000)
+    client = ServingClient(ip="127.0.0.1", port=5000, model_name=model)
 
     # Download model
     print("\nTesting download model")
     workspace = WANDB_TEAM_NAME + "/" + WANDB_PROJECT_NAME
-    model = "LogisticRegression_Distance_Angle"
+
     version = "latest"
 
     result = client.download_registry_model(workspace=workspace, model=model, version=version)
@@ -43,14 +44,15 @@ def game_client_test():
     print("\n=== Client de jeu ===")
     BASE_URL = "https://api-web.nhle.com/v1/gamecenter"
     MODEL_SERVICE_URL = "http://127.0.0.1:5000"
+    MODEL_NAME = 'LogisticRegression_Distance_Angle'
 
-    client = GameClient(BASE_URL, MODEL_SERVICE_URL)
+    client = GameClient(BASE_URL, MODEL_SERVICE_URL, MODEL_NAME)
     game_id = "2022030411"
 
     # No predictions
 
     # Supprime le fichier
-    path = f"./data/predictions/{game_id}_predictions.json"
+    path = f"./data/predictions/{MODEL_NAME}/{game_id}_predictions.json"
     if os.path.exists(path):
         os.remove(path)
 

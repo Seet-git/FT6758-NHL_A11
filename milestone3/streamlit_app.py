@@ -22,12 +22,16 @@ Just make sure that the required functionality is included as well
 WANDB_PROJECT_NAME = "IFT6758.2024-A11"
 WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
 
-actual_model = "LogisticRegression_Distance"
+
 models_list = ["LogisticRegression_Distance", "LogisticRegression_Distance_Angle"]
 
 BASE_URL = "https://api-web.nhle.com/v1/gamecenter"
 PROVIDER_IP_ADDRESS = "127.0.0.1"
 PROVIDER_SERVICE_URL = f"http://{PROVIDER_IP_ADDRESS}:5000"
+
+# Initialisation de la session pour actual_model
+if "actual_model" not in st.session_state:
+    st.session_state.actual_model = "LogisticRegression_Distance"
 
 
 def fetch_game_data(game_id):
@@ -39,7 +43,7 @@ def fetch_game_data(game_id):
         'Location': 'Stadium XYZ'
     }
 
-    client = game_client.GameClient(base_url=BASE_URL, model_service_url=PROVIDER_SERVICE_URL)
+    client = game_client.GameClient(base_url=BASE_URL, model_service_url=PROVIDER_SERVICE_URL, model_name=st.session_state.actual_model)
 
     data = client.process_game(game_id)
 
@@ -76,16 +80,17 @@ with st.sidebar:
 
     if st.sidebar.button('Get model'):
         client = serving_client.ServingClient(ip=PROVIDER_IP_ADDRESS)
+        result = client.download_registry_model(workspace=selected_workspace, model=selected_model,
+                                                version=selected_version)
 
-        result = client.download_registry_model(workspace=selected_workspace, model=selected_model, version=selected_version)
-
-        if result.status_code == 200: # success
-            actual_model = selected_model
+        st.write(f"Result status code: {result.status_code}")
+        if result.status_code == 200:  # success
+            st.session_state.actual_model = selected_model
+            st.success(f"Model '{selected_model}' successfully loaded!")
         else:
-            st.error("Une érreur est survenue lors de la récupération du modèle.")
+            st.error("An error occurred while fetching the model.")
 
-    st.write(f"Modèle actuel : {actual_model}")
-
+    st.write(f"Current Model: {st.session_state.actual_model}")
 
 with st.container():
     # Champ de saisie pour le Game ID
@@ -103,6 +108,6 @@ with st.container():
 
         # Afficher les données du jeu
         st.header("Data used for predictions (and predictions)")
-
+        game_data = game_data.drop("team", axis=1)
         st.dataframe(game_data)
 

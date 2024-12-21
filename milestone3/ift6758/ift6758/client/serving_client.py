@@ -4,13 +4,17 @@ import pandas as pd
 import logging
 
 logger = logging.getLogger(__name__)
-
+struct_model = {
+    "LogisticRegression_Distance": "distance",
+    "LogisticRegression_Distance_Angle": "angle"
+}
 
 class ServingClient:
-    def __init__(self, ip: str = "0.0.0.0", port: int = 5000, features=None):
+    def __init__(self, ip: str = "0.0.0.0", port: int = 5000, features=None, model_name=None):
         self.base_url = f"http://{ip}:{port}"
         logger.info(f"Initializing client; base URL: {self.base_url}")
 
+        self.model_name = struct_model[model_name]
         if features is None:
             features = ["distance"]
         self.features = features
@@ -28,7 +32,11 @@ class ServingClient:
         """
 
         try:
+            if self.model_name == 'distance':
+                X = X.drop('angle', axis=1)
+
             print(X.to_dict(orient="list"))
+
             response = requests.post(self.base_url + "/predict", json=X.to_dict(orient="list"))
             response.raise_for_status()
             json_response = response.json()
@@ -36,7 +44,8 @@ class ServingClient:
             return new_df
 
         except Exception as e:
-            logger.error("Error ", e)
+            print(e)
+            raise ValueError (f"Predict error {e}")
 
     def logs(self) -> dict:
         """Get server logs"""
