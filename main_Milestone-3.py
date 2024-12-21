@@ -11,7 +11,7 @@ WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
 
 def serving_test():
     print("\n=== Client fournisseur ===")
-    model = "LogisticRegression_Distance"
+    model = "LogisticRegression_Distance_Angle"
 
     # Init
     client = ServingClient(ip="127.0.0.1", port=5000, model_name=model)

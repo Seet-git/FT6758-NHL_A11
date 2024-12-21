@@ -79,7 +79,7 @@ with st.sidebar:
     selected_version = st.sidebar.selectbox("Version", versions_list)
 
     if st.sidebar.button('Get model'):
-        client = serving_client.ServingClient(ip=PROVIDER_IP_ADDRESS)
+        client = serving_client.ServingClient(ip=PROVIDER_IP_ADDRESS, model_name=st.session_state.actual_model)
         result = client.download_registry_model(workspace=selected_workspace, model=selected_model,
                                                 version=selected_version)
 
@@ -101,6 +101,9 @@ with st.container():
         # Récupérer les données du jeu et les informations du jeu
         game_info, game_data = fetch_game_data(game_id)
 
+        teams = game_data['team'].unique()
+        game_info['Teams'] = f"{teams[0]} VS {teams[1]}"
+
         # Afficher les informations du jeu
         st.write("Game Information")
         for key, value in game_info.items():
@@ -110,4 +113,3 @@ with st.container():
         st.header("Data used for predictions (and predictions)")
         game_data = game_data.drop("team", axis=1)
         st.dataframe(game_data)
-

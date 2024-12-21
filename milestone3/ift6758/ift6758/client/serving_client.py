@@ -10,7 +10,7 @@ struct_model = {
 }
 
 class ServingClient:
-    def __init__(self, ip: str = "0.0.0.0", port: int = 5000, features=None, model_name=None):
+    def __init__(self, ip: str = "0.0.0.0", port: int = 5000, features=None, model_name="LogisticRegression_Distance"):
         self.base_url = f"http://{ip}:{port}"
         logger.info(f"Initializing client; base URL: {self.base_url}")
 
