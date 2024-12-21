@@ -40,6 +40,7 @@ app = Flask(__name__)
 appHasRunBefore:bool = False
 
 model = None
+actual_model_name = None
 
 @app.before_request
 def before_first_request():
@@ -47,7 +48,7 @@ def before_first_request():
     Hook to handle any initialization before the first request (e.g. load model,
     setup logging handler, etc.)
     """
-    global appHasRunBefore, model
+    global appHasRunBefore, model, actual_model_name
 
     if not appHasRunBefore:
         # TODO: setup basic logging configuration
@@ -57,6 +58,8 @@ def before_first_request():
         model_dir = "./models/LogisticRegression_Distance.pkl"
         with open(model_dir, "rb") as file:
             model = pickle.load(file)
+
+        actual_model_name = 'LogisticRegression_Distance'
 
         appHasRunBefore = True
 
@@ -81,7 +84,6 @@ def logs():
 
 @app.route("/download_registry_model", methods=["POST"])
 def download_registry_model():
-    global model
     """
     inputs:
     - project_name: should be IFT6758.2024-A11
@@ -104,6 +106,9 @@ def download_registry_model():
         }
     
     """
+
+    global model, actual_model_name
+
     # Get POST json data
     json = request.get_json()
     app.logger.info(json)
@@ -134,6 +139,8 @@ def download_registry_model():
         with open(model_dir, "rb") as file:
             model = pickle.load(file)
 
+        actual_model_name = model_name
+
         response = {
             "status": "success",
             "message": f"Model {model_name} loaded from {model_dir}",
@@ -155,6 +162,8 @@ def download_registry_model():
         with open(f"{artifact_dir}/{model_name}.pkl", "rb") as file:
             model = pickle.load(file)
 
+        actual_model_name = model_name
+
         app.logger.info(f"Model {model_name} successfully downloaded to {artifact_dir}")
         response = {
             "status": "success",
@@ -174,8 +183,6 @@ def download_registry_model():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    global model
-
     """
     inputs: 
         - distance
@@ -185,6 +192,8 @@ def predict():
 
     Returns predictions
     """
+    global model, actual_model_name
+
     # Get POST json data
     json = request.get_json()
     app.logger.info(json)
@@ -193,7 +202,7 @@ def predict():
         distances = json["distance"]
         x_input = np.array(distances).reshape(-1, 1)  # Si angle n'est pas fourni, on utilise uniquement distance
 
-        if "angle" in json:
+        if actual_model_name == "LogisticRegression_Distance_Angle":
             angles = json["angle"]
             x_input = np.column_stack((distances, angles))
 

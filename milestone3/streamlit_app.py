@@ -22,12 +22,13 @@ Just make sure that the required functionality is included as well
 WANDB_PROJECT_NAME = "IFT6758.2024-A11"
 WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
 
-
 models_list = ["LogisticRegression_Distance", "LogisticRegression_Distance_Angle"]
 
 BASE_URL = "https://api-web.nhle.com/v1/gamecenter"
-PROVIDER_IP_ADDRESS = "127.0.0.1"
-PROVIDER_SERVICE_URL = f"http://{PROVIDER_IP_ADDRESS}:5000"
+
+PROVIDER_SERVICE_IP_ADDRESS = os.environ.get("PROVIDER_SERVICE_IP_ADDRESS", "127.0.0.1")
+
+PROVIDER_SERVICE_URL = f"http://{PROVIDER_SERVICE_IP_ADDRESS}:5000"
 
 # Initialisation de la session pour actual_model
 if "actual_model" not in st.session_state:
@@ -65,9 +66,6 @@ with st.sidebar:
     # Ajouter une liste de sélection à la sidebar
     selected_workspace = st.sidebar.selectbox( "Workspace", [workspace])
 
-    # Créer une sidebar
-    st.sidebar.title("Menu")
-
     # Ajouter une liste de sélection à la sidebar
     selected_model = st.sidebar.selectbox("Model", models_list)
 
@@ -79,7 +77,7 @@ with st.sidebar:
     selected_version = st.sidebar.selectbox("Version", versions_list)
 
     if st.sidebar.button('Get model'):
-        client = serving_client.ServingClient(ip=PROVIDER_IP_ADDRESS, model_name=st.session_state.actual_model)
+        client = serving_client.ServingClient(ip=PROVIDER_SERVICE_IP_ADDRESS, model_name=st.session_state.actual_model)
         result = client.download_registry_model(workspace=selected_workspace, model=selected_model,
                                                 version=selected_version)
 

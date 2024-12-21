@@ -4,6 +4,7 @@ import pandas as pd
 import logging
 
 logger = logging.getLogger(__name__)
+
 struct_model = {
     "LogisticRegression_Distance": "distance",
     "LogisticRegression_Distance_Angle": "angle"
