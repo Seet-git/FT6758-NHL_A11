@@ -3,6 +3,7 @@ import json
 import streamlit as st
 import pandas as pd
 import numpy as np
+import sys
 import os
 
 from ift6758.ift6758.client import serving_client, game_client
@@ -10,11 +11,14 @@ from ift6758.ift6758.client import serving_client, game_client
 WANDB_PROJECT_NAME = "IFT6758.2024-A11"
 WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
 
+
 models_list = ["LogisticRegression_Distance", "LogisticRegression_Distance_Angle"]
 
 BASE_URL = "https://api-web.nhle.com/v1/gamecenter"
-PROVIDER_IP_ADDRESS = "127.0.0.1"
-PROVIDER_SERVICE_URL = f"http://{PROVIDER_IP_ADDRESS}:5000"
+
+PROVIDER_SERVICE_IP_ADDRESS = os.environ.get("PROVIDER_SERVICE_IP_ADDRESS", "127.0.0.1")
+
+PROVIDER_SERVICE_URL = f"http://{PROVIDER_SERVICE_IP_ADDRESS}:5000"
 
 if "actual_model" not in st.session_state:
     st.session_state.actual_model = "LogisticRegression_Distance"
@@ -52,7 +56,7 @@ with st.sidebar:
     selected_version = st.sidebar.selectbox("Version", versions_list)
 
     if st.sidebar.button('Get model'):
-        client = serving_client.ServingClient(ip=PROVIDER_IP_ADDRESS, model_name=st.session_state.actual_model)
+        client = serving_client.ServingClient(ip=PROVIDER_SERVICE_IP_ADDRESS, model_name=st.session_state.actual_model)
         result = client.download_registry_model(workspace=selected_workspace, model=selected_model,
                                                 version=selected_version)
 
@@ -68,7 +72,12 @@ with st.sidebar:
     st.write(f"Current Model: \n{st.session_state.actual_model}")
 
 with st.container():
+    # Champ de saisie pour le Game ID
+    game_id = st.text_input("Game ID", "2021020329")
+
+    # Bouton pour ping le jeu
     if st.button("Ping game"):
+        # Récupérer les données du jeu et les informations du jeu
         game_info, game_data = fetch_game_data(game_id)
 
         teams = game_data['team']
