@@ -40,7 +40,6 @@ def fetch_game_data(game_id):
 
 
 st.title("Hockey Visualization App")
-game_id = st.text_input("Game ID", "2022030411")
 
 with st.sidebar:
 
