@@ -40,6 +40,7 @@ def fetch_game_data(game_id):
 
 
 st.title("Hockey Visualization App")
+game_id = st.text_input("Game ID", "2022030411")
 
 with st.sidebar:
 
@@ -71,9 +72,6 @@ with st.sidebar:
     st.write(f"Current Model: \n{st.session_state.actual_model}")
 
 with st.container():
-    # Champ de saisie pour le Game ID
-    game_id = st.text_input("Game ID", "2021020329")
-
     # Bouton pour ping le jeu
     if st.button("Ping game"):
         # Récupérer les données du jeu et les informations du jeu
