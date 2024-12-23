@@ -64,4 +64,15 @@ Pour lancer L'app StreamLit, aller dans le repertoire milestone3 et executer la 
   streamlit run ./streamlit_app.py
 ```
 
+### Setup navigateur
+
+Une fois sur votre navigateur, choisissez votre ***Game Id*** et votre ***Model*** puis cliquez sur le bouton `Get model`.
+
+### Lancement
+
+Pour lancer la recherche, cliquez sur `Ping game`.
+
+### Modèles chargés localement
+
+Vous retrouverez les modèles chargés localement dans le dossier `./data/predictions` 
 

@@ -1,5 +1,6 @@
 import json
 import os
+import pprint
 
 import pandas as pd
 
@@ -58,13 +59,13 @@ def game_client_test():
 
     print("\nTesting no predictions")
     results = client.process_game(game_id)
-    print(results)
+    pprint.pprint(results["predictions"])
     print("Process finished")
 
     # All predictions
     print("\nTesting all predictions already here")
     results = client.process_game(game_id)
-    print(results)
+    pprint.pprint(results["predictions"])
     print("Process finished")
 
     # Update tracker
@@ -74,14 +75,14 @@ def game_client_test():
         data = json.load(file)
 
     if len(data) >= 2:
-        data = data[:-2]
+        data = data["predictions"][:-2]
 
     with open(path, "w") as file:
         json.dump(data, file, indent=1)
 
     print("\nTesting update tracker :")
     results = client.process_game(game_id)
-    print(results)
+    pprint.pprint(results["predictions"])
     print("Process finished")
 
 
