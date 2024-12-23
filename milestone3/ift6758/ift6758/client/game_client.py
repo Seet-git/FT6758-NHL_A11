@@ -88,7 +88,7 @@ class GameClient:
         scores = predictions_df[predictions_df['isGoal'] == 1]['team'].value_counts().to_dict()
 
         score_xg_diff = {
-            team: round(xg_totals.get(team, 0) - scores.get(team, 0), 2)
+            team: scores.get(team, 0) - xg_totals.get(team, 0)
             for team in teams
         }
 
@@ -137,7 +137,6 @@ class GameClient:
         predictions_df = pd.concat([game, predictions_df], axis=1)
         predictions_df = predictions_df.drop('is_goal', axis=1)
         predictions_df = predictions_df.rename(columns={'goal_probs': 'Model output'})
-        predictions_df.index = [f"event {i}" for i in range(len(predictions_df['Model output']))]
 
         results = self.process_results(predictions_df)
         self._save_predictions(game_id, results)

@@ -11,7 +11,6 @@ from ift6758.ift6758.client import serving_client, game_client
 WANDB_PROJECT_NAME = "IFT6758.2024-A11"
 WANDB_TEAM_NAME = "youry-macius-universite-de-montreal"
 
-
 models_list = ["LogisticRegression_Distance", "LogisticRegression_Distance_Angle"]
 
 BASE_URL = "https://api-web.nhle.com/v1/gamecenter"
@@ -43,7 +42,6 @@ st.title("Hockey Visualization App")
 game_id = st.text_input("Game ID", "2022030411")
 
 with st.sidebar:
-
     workspace = WANDB_TEAM_NAME + "/" + WANDB_PROJECT_NAME
 
     st.sidebar.title("Menu")
@@ -98,4 +96,5 @@ with st.container():
         # Display Predictions Data
         st.header("Data Used for Predictions (and Predictions)")
         predictions_df = pd.DataFrame(game_data["predictions"]).drop("team", axis=1)
+        predictions_df.index = [f"event {i}" for i in range(len(predictions_df['Model output']))]
         st.dataframe(predictions_df)
