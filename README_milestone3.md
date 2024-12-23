@@ -51,8 +51,7 @@ ensuite
   docker-compose up
 ```
 
-- Tester les calls API comme expliqué précédement pour vérifier que
-le serveur a bien démarré
+- Tester les calls API au provider client en http://localhost:5000 (voir main_Milestone-3.py) 
 
 
 # Section Streamlit 
@@ -63,6 +62,25 @@ Pour lancer L'app StreamLit, aller dans le repertoire milestone3 et executer la 
   cd milestone3/
   streamlit run ./streamlit_app.py
 ```
+
+# Docker app streamlit
+
+- Ouvrir l'app Docker desktop
+- aller dans le repertoire milestone3 du projet
+- dans le fichier .env du dossier milestone3, y mentionner votre clé API wandb
+- executer les commandes:
+```bash
+  docker-compose build
+```
+ensuite
+
+```bash
+  docker-compose up
+```
+
+- Une fois les services lancés, accéder a l'app via ce lien: http://127.0.0.1:4000/ 
+
+
 
 ### Setup navigateur
 
